@@ -1,0 +1,287 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: 
+    /* ESPIRAL INTEGRADA AL FONDO - ANILLOS CONCÉNTRICOS NATURALES */
+    radial-gradient(circle at 50% 50%, 
+      rgba(0, 0, 0, 0.4) 0%, 
+      rgba(138, 43, 226, 0.95) 3%, 
+      rgba(0, 0, 0, 0.3) 5%, 
+      rgba(255, 20, 147, 0.9) 7%, 
+      rgba(0, 0, 0, 0.2) 9%, 
+      rgba(75, 0, 130, 0.95) 11%, 
+      rgba(0, 0, 0, 0.15) 13%, 
+      rgba(220, 20, 60, 0.9) 15%, 
+      rgba(0, 0, 0, 0.1) 17%, 
+      rgba(50, 205, 50, 0.8) 19%, 
+      rgba(0, 0, 0, 0.05) 21%, 
+      rgba(148, 0, 211, 0.9) 23%, 
+      transparent 25%
+    ), /* Anillos concéntricos del remolino */
+    
+    /* EFECTO DE REMOLINO INTEGRADO CON MÁS SOMBRAS */
+    radial-gradient(circle at 48% 52%, rgba(0, 0, 0, 0.2) 0%, rgba(220, 20, 60, 0.9) 3%, rgba(50, 205, 50, 0.8) 8%, transparent 20%), /* Remolino desplazado 1 con sombra */
+    radial-gradient(circle at 52% 48%, rgba(0, 0, 0, 0.25) 0%, rgba(148, 0, 211, 0.9) 2%, rgba(255, 69, 0, 0.8) 7%, transparent 18%), /* Remolino desplazado 2 con sombra */
+    radial-gradient(circle at 49% 51%, rgba(0, 0, 0, 0.15) 0%, rgba(72, 61, 139, 0.9) 4%, rgba(199, 21, 133, 0.8) 9%, transparent 22%), /* Remolino desplazado 3 con sombra */
+    radial-gradient(circle at 51% 49%, rgba(0, 0, 0, 0.1) 0%, rgba(138, 43, 226, 0.7) 3%, rgba(255, 20, 147, 0.6) 6%, transparent 15%), /* Sombra adicional 1 */
+    radial-gradient(circle at 49.5% 50.5%, rgba(0, 0, 0, 0.2) 0%, rgba(75, 0, 130, 0.8) 2%, rgba(220, 20, 60, 0.7) 5%, transparent 12%), /* Sombra adicional 2 */
+    
+    /* CAPA BASE - MUY DENSA CON EFECTO DE SUCCIÓN */
+    radial-gradient(circle at 15% 25%, rgba(138, 43, 226, 0.95) 0%, transparent 45%), /* Violeta intenso - SÚPER DENSO */
+    radial-gradient(circle at 85% 15%, rgba(255, 20, 147, 0.9) 0%, transparent 50%), /* Fucsia vibrante - SÚPER DENSO */
+    radial-gradient(circle at 45% 75%, rgba(75, 0, 130, 0.95) 0%, transparent 45%), /* Índigo profundo - SÚPER DENSO */
+    radial-gradient(circle at 90% 85%, rgba(220, 20, 60, 0.9) 0%, transparent 50%), /* Rojo carmesí - SÚPER DENSO */
+    radial-gradient(circle at 10% 85%, rgba(50, 205, 50, 0.8) 0%, transparent 55%), /* Verde lima - SÚPER DENSO */
+    radial-gradient(circle at 75% 20%, rgba(148, 0, 211, 0.9) 0%, transparent 45%), /* Violeta oscuro - SÚPER DENSO */
+    radial-gradient(circle at 25% 55%, rgba(255, 69, 0, 0.8) 0%, transparent 50%), /* Rojo naranja - SÚPER DENSO */
+    radial-gradient(circle at 65% 90%, rgba(72, 61, 139, 0.9) 0%, transparent 45%), /* Azul pizarra - SÚPER DENSO */
+    radial-gradient(circle at 80% 45%, rgba(199, 21, 133, 0.8) 0%, transparent 50%), /* Rosa intenso - SÚPER DENSO */
+    
+    /* CAPAS INTERMEDIAS - AGUA SIENDO SUCCIONADA */
+    radial-gradient(circle at 35% 15%, rgba(138, 43, 226, 0.7) 0%, transparent 40%), /* Violeta extra */
+    radial-gradient(circle at 55% 35%, rgba(255, 20, 147, 0.6) 0%, transparent 45%), /* Fucsia extra */
+    radial-gradient(circle at 15% 65%, rgba(75, 0, 130, 0.7) 0%, transparent 40%), /* Índigo extra */
+    radial-gradient(circle at 70% 60%, rgba(220, 20, 60, 0.6) 0%, transparent 45%), /* Rojo extra */
+    radial-gradient(circle at 40% 40%, rgba(148, 0, 211, 0.6) 0%, transparent 40%), /* Violeta extra */
+    
+    /* CAPAS DE TURBULENCIA HACIA EL CENTRO */
+    radial-gradient(circle at 22% 80%, rgba(138, 43, 226, 0.5) 0%, transparent 35%), /* Turbulencia violeta */
+    radial-gradient(circle at 78% 35%, rgba(255, 20, 147, 0.4) 0%, transparent 40%), /* Turbulencia fucsia */
+    radial-gradient(circle at 60% 15%, rgba(75, 0, 130, 0.5) 0%, transparent 35%), /* Turbulencia índigo */
+    radial-gradient(circle at 30% 90%, rgba(220, 20, 60, 0.4) 0%, transparent 40%), /* Turbulencia roja */
+    radial-gradient(circle at 85% 70%, rgba(148, 0, 211, 0.4) 0%, transparent 35%), /* Turbulencia violeta */
+    radial-gradient(circle at 12% 40%, rgba(255, 69, 0, 0.5) 0%, transparent 35%), /* Turbulencia naranja */
+    
+    linear-gradient(135deg, rgba(138, 43, 226, 0.5), rgba(255, 20, 147, 0.5), rgba(75, 0, 130, 0.5), rgba(50, 205, 50, 0.4));
+  animation: riverWithSpiral 12s ease-in-out infinite; /* Animación que incluye rotación sutil para la espiral */
+}
+
+@keyframes riverWithSpiral {
+  0%, 100% {
+    filter: hue-rotate(0deg) saturate(1.6) brightness(1.2);
+    transform: rotate(0deg);
+  }
+  25% {
+    filter: hue-rotate(90deg) saturate(1.8) brightness(1.3);
+    transform: rotate(1deg);
+  }
+  50% {
+    filter: hue-rotate(180deg) saturate(1.4) brightness(0.8);
+    transform: rotate(0deg);
+  }
+  75% {
+    filter: hue-rotate(270deg) saturate(1.7) brightness(1.25);
+    transform: rotate(-1deg);
+  }
+}
+
+/* Capa adicional de niebla que se mueve - TURBULENTA */
+.app::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    /* NIEBLA BASE - SÚPER DENSA */
+    radial-gradient(circle at 30% 20%, rgba(186, 85, 211, 0.8) 0%, transparent 35%), /* Orquídea - SÚPER DENSO */
+    radial-gradient(circle at 70% 80%, rgba(255, 105, 180, 0.7) 0%, transparent 40%), /* Rosa caliente - SÚPER DENSO */
+    radial-gradient(circle at 20% 70%, rgba(123, 104, 238, 0.8) 0%, transparent 35%), /* Azul pizarra - SÚPER DENSO */
+    radial-gradient(circle at 85% 25%, rgba(255, 99, 71, 0.7) 0%, transparent 40%), /* Tomate - SÚPER DENSO */
+    radial-gradient(circle at 40% 85%, rgba(34, 139, 34, 0.6) 0%, transparent 45%), /* Verde bosque - SÚPER DENSO */
+    radial-gradient(circle at 60% 40%, rgba(147, 112, 219, 0.6) 0%, transparent 40%), /* Púrpura - SÚPER DENSO */
+    radial-gradient(circle at 90% 60%, rgba(255, 140, 0, 0.7) 0%, transparent 35%), /* Naranja - SÚPER DENSO */
+    
+    /* NIEBLA TURBULENTA */
+    radial-gradient(circle at 50% 30%, rgba(186, 85, 211, 0.6) 0%, transparent 30%), /* Orquídea turbulenta */
+    radial-gradient(circle at 25% 60%, rgba(255, 105, 180, 0.5) 0%, transparent 35%), /* Rosa turbulenta */
+    radial-gradient(circle at 75% 50%, rgba(123, 104, 238, 0.6) 0%, transparent 30%), /* Azul turbulento */
+    radial-gradient(circle at 45% 15%, rgba(147, 112, 219, 0.5) 0%, transparent 35%), /* Púrpura turbulento */
+    radial-gradient(circle at 15% 35%, rgba(255, 140, 0, 0.5) 0%, transparent 30%), /* Naranja turbulento */
+    radial-gradient(circle at 80% 75%, rgba(34, 139, 34, 0.4) 0%, transparent 35%), /* Verde turbulento */
+    
+    /* REMOLINOS ADICIONALES */
+    radial-gradient(circle at 65% 25%, rgba(186, 85, 211, 0.4) 0%, transparent 25%), /* Remolino 1 */
+    radial-gradient(circle at 35% 75%, rgba(255, 105, 180, 0.3) 0%, transparent 30%), /* Remolino 2 */
+    radial-gradient(circle at 55% 65%, rgba(123, 104, 238, 0.4) 0%, transparent 25%); /* Remolino 3 */
+  animation: fogMove 18s linear infinite; /* Más lento para contraste con el fondo rápido */
+}
+
+@keyframes fogMove {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  20% {
+    transform: translate(-25px, -30px) rotate(72deg) scale(1.2); /* Movimiento más agresivo */
+  }
+  40% {
+    transform: translate(30px, -20px) rotate(144deg) scale(0.8);
+  }
+  60% {
+    transform: translate(-20px, 25px) rotate(216deg) scale(1.15);
+  }
+  80% {
+    transform: translate(15px, -25px) rotate(288deg) scale(0.9);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+  }
+}
+
+.content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 2rem;
+}
+
+.title-container {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.audio-player-container {
+  flex: 0 0 auto;
+  min-width: 400px;
+}
+
+.title {
+  font-family: 'Orbitron', 'Arial Black', 'Helvetica', sans-serif;
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 4px #ffffff;
+  text-stroke: 4px #ffffff;
+  letter-spacing: 0.2em;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  animation: titlePulse 3s ease-in-out infinite alternate;
+  text-shadow: none;
+  position: relative;
+}
+
+/* Eliminar el reflejo animado de MONTE */
+/* .title::after eliminado completamente */
+
+@keyframes titlePulse {
+  from {
+    -webkit-text-stroke: 3px rgba(255, 255, 255, 0.8);
+    text-stroke: 3px rgba(255, 255, 255, 0.8);
+  }
+  to {
+    -webkit-text-stroke: 3px rgba(255, 255, 255, 1);
+    text-stroke: 3px rgba(255, 255, 255, 1);
+  }
+}
+
+/* Responsive design mejorado para móviles */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    width: 100%;
+    max-width: 100vw;
+  }
+  
+  .title-container {
+    order: 1;
+  }
+  
+  .audio-player-container {
+    order: 2;
+    min-width: 100%;
+  }
+  
+  .title {
+    font-size: clamp(3rem, 15vw, 5rem);
+    -webkit-text-stroke: 3px #ffffff;
+    text-stroke: 3px #ffffff;
+    letter-spacing: 0.15em;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app {
+    /* Fondo optimizado para móviles */
+    background: 
+      /* CAPA BASE - OPTIMIZADA MÓVIL */
+      radial-gradient(ellipse 300px 200px at 15% 25%, rgba(138, 43, 226, 0.95) 0%, transparent 45%),
+      radial-gradient(ellipse 320px 220px at 85% 15%, rgba(255, 20, 147, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 350px 250px at 45% 75%, rgba(75, 0, 130, 0.95) 0%, transparent 45%),
+      radial-gradient(ellipse 300px 200px at 90% 85%, rgba(220, 20, 60, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 280px 180px at 10% 85%, rgba(50, 205, 50, 0.8) 0%, transparent 55%),
+      radial-gradient(ellipse 320px 220px at 75% 20%, rgba(148, 0, 211, 0.9) 0%, transparent 45%),
+      radial-gradient(ellipse 250px 170px at 25% 55%, rgba(255, 69, 0, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse 300px 200px at 65% 90%, rgba(72, 61, 139, 0.9) 0%, transparent 45%),
+      radial-gradient(ellipse 280px 190px at 80% 45%, rgba(199, 21, 133, 0.8) 0%, transparent 50%),
+      
+      /* CAPAS MÓVIL OPTIMIZADAS */
+      radial-gradient(ellipse 200px 150px at 35% 15%, rgba(138, 43, 226, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 220px 160px at 55% 35%, rgba(255, 20, 147, 0.6) 0%, transparent 45%),
+      radial-gradient(ellipse 180px 130px at 15% 65%, rgba(75, 0, 130, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 200px 140px at 70% 60%, rgba(220, 20, 60, 0.6) 0%, transparent 45%),
+      
+      linear-gradient(135deg, rgba(138, 43, 226, 0.5), rgba(255, 20, 147, 0.5), rgba(75, 0, 130, 0.5), rgba(50, 205, 50, 0.4));
+  }
+
+  .app::before {
+    /* Niebla optimizada para móviles */
+    background: 
+      radial-gradient(ellipse 250px 180px at 30% 20%, rgba(186, 85, 211, 0.8) 0%, transparent 35%),
+      radial-gradient(ellipse 270px 200px at 70% 80%, rgba(255, 105, 180, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 230px 170px at 20% 70%, rgba(123, 104, 238, 0.8) 0%, transparent 35%),
+      radial-gradient(ellipse 250px 180px at 85% 25%, rgba(255, 99, 71, 0.7) 0%, transparent 40%),
+      radial-gradient(ellipse 200px 150px at 40% 85%, rgba(34, 139, 34, 0.6) 0%, transparent 45%),
+      radial-gradient(ellipse 220px 160px at 60% 40%, rgba(147, 112, 219, 0.6) 0%, transparent 40%);
+  }
+  
+  .content {
+    gap: 1.5rem;
+    padding: 1rem 0.5rem;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  
+  .audio-player-container {
+    min-width: 100%;
+  }
+  
+  .title {
+    font-size: clamp(2.5rem, 18vw, 4rem);
+    -webkit-text-stroke: 2px #ffffff;
+    text-stroke: 2px #ffffff;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    line-height: 1.1;
+  }
+} 
