@@ -1,183 +1,191 @@
 import { useState, useRef, useEffect, forwardRef, useImperativeHandle } from 'react'
 import './AudioPlayer.css'
 
+/**
+ * RadioPlayer — compact floating radio widget
+ * Streams SomaFM channels: 100% free, no ads, license-cleared.
+ * Positioned bottom-right corner, minimal footprint.
+ */
+
+const STATIONS = [
+  {
+    id: 'groovesalad',
+    name: 'Groove Salad',
+    desc: 'Ambient / Electronic',
+    url: 'https://ice2.somafm.com/groovesalad-128-mp3',
+    color: '#59ff00',
+  },
+  {
+    id: 'deepspace',
+    name: 'Deep Space One',
+    desc: 'Deep / Atmospheric',
+    url: 'https://ice2.somafm.com/deepspaceone-128-mp3',
+    color: '#00d0ff',
+  },
+  {
+    id: 'fluid',
+    name: 'Fluid',
+    desc: 'Ambient House',
+    url: 'https://ice2.somafm.com/fluid-128-mp3',
+    color: '#ff5500',
+  },
+  {
+    id: 'dronezone',
+    name: 'Drone Zone',
+    desc: 'Dark Ambient',
+    url: 'https://ice2.somafm.com/dronezone-128-mp3',
+    color: '#a3e635',
+  },
+]
+
 const AudioPlayer = forwardRef(({ onPlayingChange }, ref) => {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(0.7)
-  const [currentSong, setCurrentSong] = useState(null)
-  const [songTitle, setSongTitle] = useState('Selecciona una canción')
+  const [isPlaying, setIsPlaying]     = useState(false)
+  const [stationIdx, setStationIdx]   = useState(0)
+  const [volume, setVolume]           = useState(0.6)
+  const [expanded, setExpanded]       = useState(false)
+  const [loading, setLoading]         = useState(false)
 
   const audioRef = useRef(null)
-  const fileInputRef = useRef(null)
 
+  // Expose the audio element so ThreeParticles can read it
   useImperativeHandle(ref, () => audioRef.current)
 
+  const station = STATIONS[stationIdx]
+
+  // Notify parent of playing state
   useEffect(() => {
-    const audio = audioRef.current
-
-    const setAudioData = () => {
-      setDuration(audio.duration)
-      setCurrentTime(audio.currentTime)
-    }
-
-    const setAudioTime = () => setCurrentTime(audio.currentTime)
-
-    if (audio) {
-      audio.addEventListener('loadeddata', setAudioData)
-      audio.addEventListener('timeupdate', setAudioTime)
-
-      return () => {
-        audio.removeEventListener('loadeddata', setAudioData)
-        audio.removeEventListener('timeupdate', setAudioTime)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (onPlayingChange) {
-      onPlayingChange(isPlaying)
-    }
+    onPlayingChange?.(isPlaying)
   }, [isPlaying, onPlayingChange])
 
-  const handleFileInputChange = (event) => {
-    const file = event.target.files[0]
-    if (file && file.type.startsWith('audio/')) {
-      if (isPlaying) {
-        audioRef.current.pause()
-        setIsPlaying(false)
-      }
-
-      if (currentSong && currentSong.startsWith('blob:')) {
-        URL.revokeObjectURL(currentSong)
-      }
-
-      const url = URL.createObjectURL(file)
-      setCurrentSong(url)
-      setSongTitle(file.name.replace(/\.[^/.]+$/, ""))
-
-      setTimeout(() => {
-        if (audioRef.current) {
-          audioRef.current.load()
-        }
-      }, 50)
-    }
-  }
-
-  const togglePlayPause = () => {
+  // When station changes, reload and resume if was playing
+  useEffect(() => {
     const audio = audioRef.current
-
-    if (!currentSong) {
-      fileInputRef.current.click()
-      return
+    if (!audio) return
+    const wasPlaying = isPlaying
+    audio.pause()
+    audio.load()
+    if (wasPlaying) {
+      setLoading(true)
+      audio.play()
+        .then(() => { setIsPlaying(true); setLoading(false) })
+        .catch(() => { setIsPlaying(false); setLoading(false) })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stationIdx])
 
+  // Volume sync
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.volume = volume
+  }, [volume])
+
+  const togglePlay = () => {
+    const audio = audioRef.current
+    if (!audio) return
     if (isPlaying) {
       audio.pause()
       setIsPlaying(false)
     } else {
-      audio.play().then(() => {
-        setIsPlaying(true)
-      }).catch(error => {
-        console.log('Error playing audio:', error)
-        setIsPlaying(false)
-      })
+      setLoading(true)
+      audio.play()
+        .then(() => { setIsPlaying(true); setLoading(false) })
+        .catch(() => { setIsPlaying(false); setLoading(false) })
     }
   }
 
-  const handleSeek = (e) => {
-    const audio = audioRef.current
-    const clickX = e.nativeEvent.offsetX
-    const width = e.currentTarget.offsetWidth
-    const newTime = (clickX / width) * duration
-    audio.currentTime = newTime
-    setCurrentTime(newTime)
-  }
-
-  const handleVolumeChange = (e) => {
-    const newVolume = e.target.value
-    setVolume(newVolume)
-    audioRef.current.volume = newVolume
-  }
-
-  const formatTime = (time) => {
-    if (!time || isNaN(time)) return '0:00'
-    const minutes = Math.floor(time / 60)
-    const seconds = Math.floor(time % 60)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
+  const selectStation = (idx) => {
+    if (idx === stationIdx) return
+    setStationIdx(idx)
+    setExpanded(false)
   }
 
   return (
-    <div className="audio-player">
+    <div className={`radio-widget ${expanded ? 'radio-expanded' : ''}`}
+         style={{ '--station-color': station.color }}>
+
+      {/* Hidden audio element */}
       <audio
         ref={audioRef}
-        src={currentSong}
-        onEnded={() => setIsPlaying(false)}
+        src={station.url}
+        preload="none"
+        onWaiting={() => setLoading(true)}
+        onPlaying={() => { setLoading(false); setIsPlaying(true) }}
+        onPause={() => setIsPlaying(false)}
+        onError={() => { setLoading(false); setIsPlaying(false) }}
       />
 
-      <div className="player-main">
+      {/* ── COMPACT BAR ── */}
+      <div className="radio-bar">
+
+        {/* Play / Pause */}
         <button
-          className="play-pause-btn"
-          onClick={togglePlayPause}
-          title={currentSong ? (isPlaying ? 'Pausar' : 'Reproducir') : 'Seleccionar canción'}
+          className={`radio-play-btn ${isPlaying ? 'playing' : ''}`}
+          onClick={togglePlay}
+          aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
         >
-          <span className="btn-icon">
-            {isPlaying ? '⏸' : '▶'}
-          </span>
+          {loading
+            ? <span className="radio-spinner" />
+            : <span>{isPlaying ? '■' : '▶'}</span>
+          }
         </button>
 
-        <div className="song-info">
-          <div className="song-title">{songTitle}</div>
-        </div>
+        {/* Station info */}
+        <button className="radio-info" onClick={() => setExpanded(e => !e)}>
+          <span className="radio-live-dot" style={{ opacity: isPlaying ? 1 : 0.3 }} />
+          <span className="radio-station-name">{station.name}</span>
+          <span className="radio-station-desc">{station.desc}</span>
+        </button>
 
-        <div className="time-display">{formatTime(currentTime)}</div>
-
-        <div
-          className="progress-bar"
-          onClick={handleSeek}
-        >
-          <div
-            className="progress-fill"
-            style={{ width: `${duration ? (currentTime / duration) * 100 : 0}%` }}
-          />
-        </div>
-
-        <div className="time-display">{formatTime(duration)}</div>
-
-        <div className="volume-container">
-          <span className="volume-icon">🔊</span>
+        {/* Volume */}
+        <label className="radio-vol-wrap" aria-label="Volumen">
+          <span className="radio-vol-icon">{volume === 0 ? '🔇' : '▲'}</span>
           <input
             type="range"
-            min="0"
-            max="1"
-            step="0.01"
+            min="0" max="1" step="0.02"
             value={volume}
-            onChange={handleVolumeChange}
-            className="volume-slider"
+            onChange={e => setVolume(+e.target.value)}
+            className="radio-vol-slider"
           />
-        </div>
+        </label>
 
+        {/* Expand toggle */}
         <button
-          className="upload-btn"
-          onClick={() => fileInputRef.current.click()}
-          title="Cargar canción"
+          className="radio-expand-btn"
+          onClick={() => setExpanded(e => !e)}
+          aria-label="Cambiar estación"
         >
-          📁
+          {expanded ? '×' : '≡'}
         </button>
-
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileInputChange}
-          accept="audio/*"
-          style={{ display: 'none' }}
-        />
       </div>
+
+      {/* ── STATION PICKER (expanded) ── */}
+      {expanded && (
+        <div className="radio-station-list">
+          <p className="radio-list-header">— SomaFM / Seleccionar canal —</p>
+          {STATIONS.map((s, i) => (
+            <button
+              key={s.id}
+              className={`radio-station-item ${i === stationIdx ? 'active' : ''}`}
+              style={{ '--sc': s.color }}
+              onClick={() => selectStation(i)}
+            >
+              <span className="rsi-dot" />
+              <span className="rsi-name">{s.name}</span>
+              <span className="rsi-desc">{s.desc}</span>
+            </button>
+          ))}
+          <a
+            href="https://somafm.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="radio-credit"
+          >
+            SomaFM — free radio ↗
+          </a>
+        </div>
+      )}
     </div>
   )
 })
 
-AudioPlayer.displayName = 'AudioPlayer'
-
+AudioPlayer.displayName = 'RadioPlayer'
 export default AudioPlayer

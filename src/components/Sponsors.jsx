@@ -40,10 +40,10 @@ function Sponsors() {
     ]
 
     const eventStats = [
-        { label: 'Asistentes Esperados', value: '200+' },
-        { label: 'Horas de Evento', value: '12+' },
-        { label: 'Artistas', value: '6' },
-        { label: 'Visualizaciones', value: '10,000+' }
+        { label: 'Asistentes Anuales Esperados', value: '500+' },
+        { label: 'Horas de Baile y Rituales', value: '24+' },
+        { label: 'Artistas en Temporada', value: '15+' },
+        { label: 'Visualizaciones Digitales', value: '50,000+' }
     ]
 
     const containerVariants = {
@@ -79,10 +79,9 @@ function Sponsors() {
                         <span className="title-outline-sponsors">PROPUESTA</span>
                         <span className="title-fill-sponsors">PROPUESTA</span>
                     </h1>
-                    <p className="sponsors-subtitle">COMERCIAL SAFAERA 2026</p>
+                    <p className="sponsors-subtitle">COMERCIAL LOOP.RAVE 2026</p>
                     <p className="sponsors-description">
-                        Únete a SAFAERA 2026 como patrocinador y conecta tu marca con más de 200 asistentes
-                        en el evento de música electrónica más importante de Florencia. Alcanza más de 10,000 visualizaciones para tu marca.
+                        Únete a LOOP.RAVE como patrocinador y conecta tu marca con la comunidad de música electrónica más activa de Florencia. Potencia la visibilidad de tu negocio a través de activaciones inmersivas y alcance digital garantizado.
                     </p>
                 </motion.div>
 
@@ -143,19 +142,17 @@ function Sponsors() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 0.5 }}
                 >
-                    <h2 className="section-title">🎵 LINEUP CONFIRMADO</h2>
+                    <h2 className="section-title">📅 PRÓXIMOS EVENTOS CLAVE</h2>
                     <div className="lineup-summary">
                         <div className="lineup-category">
-                            <h3>Headliner</h3>
-                            <p>BRENDA B2B MARIA MANUELA</p>
+                            <h3>Próxima Fiesta: SELVÁTICA</h3>
+                            <p><strong>Fecha:</strong> 8 de Agosto, 2026 (Jurazzic Park)</p>
+                            <p><strong>Lineup:</strong> Brenda B2B Maria Manuela • Krubim • Cathie V y DJs regionales</p>
                         </div>
                         <div className="lineup-category">
-                            <h3>Artistas Nacionales</h3>
-                            <p>KRUBIM • CATHIE V</p>
-                        </div>
-                        <div className="lineup-category">
-                            <h3>Artistas Regionales</h3>
-                            <p>ZHIRA B2B KALLICEBUS • JHONSOUND B2B KHOPRE • DANNG</p>
+                            <h3>Gran Evento del Año: FESTIVAL MONTE</h3>
+                            <p><strong>Fecha:</strong> 4 & 5 de Diciembre, 2026 (Reserva Natural Monte)</p>
+                            <p><strong>Lineup:</strong> DJs internacionales, nacionales y locales por confirmar</p>
                         </div>
                     </div>
                 </motion.section>
@@ -167,23 +164,23 @@ function Sponsors() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 1, delay: 0.7 }}
                 >
-                    <h2 className="section-title">📅 DETALLES DEL EVENTO</h2>
+                    <h2 className="section-title">📊 DETALLES COMERCIALES</h2>
                     <div className="details-card">
                         <div className="detail-row">
-                            <span className="detail-label">FECHA:</span>
-                            <span className="detail-value">28 de Febrero, 2026</span>
+                            <span className="detail-label">UBICACIÓN GENERAL:</span>
+                            <span className="detail-value">Florencia, Caquetá</span>
                         </div>
                         <div className="detail-row">
-                            <span className="detail-label">LUGAR:</span>
-                            <span className="detail-value">Jurazzic Park, Florencia</span>
+                            <span className="detail-label">PÚBLICO PROMEDIO:</span>
+                            <span className="detail-value">Jóvenes e industrias creativas (18-35 años)</span>
                         </div>
                         <div className="detail-row">
-                            <span className="detail-label">HORARIO:</span>
-                            <span className="detail-value">1:00 PM - 6:00 AM</span>
+                            <span className="detail-label">ENFOQUE:</span>
+                            <span className="detail-value">Experiencia audiovisual premium, diseño 3D e inclusión radical</span>
                         </div>
                         <div className="detail-row">
-                            <span className="detail-label">CAPACIDAD:</span>
-                            <span className="detail-value">200 personas</span>
+                            <span className="detail-label">IMPACTO DEL AÑO:</span>
+                            <span className="detail-value">2 grandes festivales y múltiples activaciones locales</span>
                         </div>
                     </div>
                 </motion.section>
@@ -273,8 +270,8 @@ function Sponsors() {
                     <h2 className="section-title">💼 CONTACTO COMERCIAL</h2>
                     <div className="contact-card-sponsors">
                         <p className="contact-intro">
-                            ¿Interesado en ser parte de SAFAERA 2026? Contáctanos para discutir
-                            oportunidades de patrocinio personalizadas para tu marca.
+                            ¿Interesado en ser aliado comercial o patrocinador de LOOP.RAVE? Contáctanos para discutir
+                            oportunidades de patrocinio personalizadas y activaciones de marca.
                         </p>
                         <div className="contact-info">
                             <div className="contact-item">

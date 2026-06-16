@@ -1,0 +1,68 @@
+/* Cart Widget — floating bottom-left */
+.cart-widget {
+  position: fixed;
+  bottom: 20px;
+  left: 16px;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(8, 8, 8, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 2px solid var(--theme-accent);
+  border-radius: 12px;
+  padding: 10px 16px 10px 12px;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  font-family: var(--font-technical);
+}
+
+.cart-icon {
+  font-size: 22px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px var(--theme-accent));
+}
+
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  left: 26px;
+  background: var(--theme-accent);
+  color: #000;
+  font-size: 9px;
+  font-weight: 900;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0;
+  box-shadow: 0 0 8px var(--theme-accent);
+}
+
+.cart-label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.cart-label-title {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+}
+
+.cart-label-total {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--theme-accent);
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 500px) {
+  .cart-widget { left: 10px; bottom: 16px; }
+}
