@@ -1,0 +1,55 @@
+/* LOOP.RAVE CSS Variable Design System */
+
+:root {
+  /* Default Theme: Selvática (Eco-Acid Cyberpunk) */
+  --theme-bg: #f4f3ef;                  /* Crema retro */
+  --theme-bg-rgb: 244, 243, 239;
+  --theme-text: #0d0e10;                /* Negro tinta */
+  --theme-text-rgb: 13, 14, 16;
+  --theme-accent: #ff5500;              /* Naranja brillante */
+  --theme-accent-rgb: 255, 85, 0;
+  --theme-secondary: #00d0ff;           /* Azul mariposa Morpho */
+  --theme-secondary-rgb: 0, 208, 255;
+  --theme-neon: #59ff00;                /* Verde cromo/ácido */
+  --theme-neon-rgb: 89, 255, 0;
+  
+  --theme-particle-color: #59ff00;
+  --theme-grid-opacity: 0.12;
+  --theme-card-bg: rgba(255, 255, 255, 0.4);
+  --theme-card-border: rgba(13, 14, 16, 0.1);
+  --theme-glow: 0 0 15px rgba(255, 85, 0, 0.4);
+  --theme-glow-neon: 0 0 15px rgba(89, 255, 0, 0.5);
+
+  /* Shared Layout Constants */
+  --font-technical: 'Space Mono', 'Courier New', monospace;
+  --font-display: 'Outfit', 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --nav-height: 70px;
+  
+  /* Transition timings */
+  --transition-morph: background-color 1.2s cubic-bezier(0.25, 1, 0.5, 1), 
+                       color 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+                       border-color 0.8s cubic-bezier(0.25, 1, 0.5, 1),
+                       box-shadow 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* FESTIVAL MONTE Variation (Deep Jungle & Gold) */
+[data-theme="monte"] {
+  --theme-bg: #05180f;                  /* Verde selva profunda */
+  --theme-bg-rgb: 5, 24, 15;
+  --theme-text: #ffffff;                /* Blanco */
+  --theme-text-rgb: 255, 255, 255;
+  --theme-accent: #d4af37;              /* Oro reflectante */
+  --theme-accent-rgb: 212, 175, 55;
+  --theme-secondary: #10b981;           /* Verde esmeralda */
+  --theme-secondary-rgb: 16, 185, 129;
+  --theme-neon: #a3e635;                /* Verde lima claro */
+  --theme-neon-rgb: 163, 230, 53;
+  
+  --theme-particle-color: #d4af37;
+  --theme-grid-opacity: 0.04;
+  --theme-card-bg: rgba(7, 32, 19, 0.6);
+  --theme-card-border: rgba(212, 175, 55, 0.2);
+  --theme-glow: 0 0 20px rgba(212, 175, 55, 0.35);
+  --theme-glow-neon: 0 0 15px rgba(163, 230, 53, 0.4);
+}

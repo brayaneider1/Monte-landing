@@ -1,26 +1,32 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { CartProvider } from './context/CartContext'
 import Navbar from './components/Navbar'
-import SafaeraHome from './components/SafaeraHome'
+import LoopHome from './components/layout/LoopHome'
 import Sponsors from './components/Sponsors'
+import AdminPanel from './pages/AdminPanel'
+import CartWidget from './components/cart/CartWidget'
 import './App.css'
 
 function App() {
-
   return (
-    <Router>
-      <div className="app">
-        <Navbar />
+    <CartProvider>
+      <Router>
+        <div className="app">
+          <Navbar />
 
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<SafaeraHome />} />
-            <Route path="/sponsors" element={<Sponsors />} />
-          </Routes>
+          <div className="main-content">
+            <Routes>
+              <Route path="/"        element={<LoopHome />} />
+              <Route path="/sponsors" element={<Sponsors />} />
+              <Route path="/admin"   element={<AdminPanel />} />
+            </Routes>
+          </div>
+
+          {/* Floating cart widget — visible on all routes except admin */}
+          <CartWidget />
         </div>
-
-
-      </div>
-    </Router>
+      </Router>
+    </CartProvider>
   )
 }
 

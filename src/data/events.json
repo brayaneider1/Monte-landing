@@ -1,0 +1,43 @@
+[
+  {
+    "id": "selvatica",
+    "name": "SELVÁTICA",
+    "tagline": "FIESTA UNDERGROUND · AMANECER · Y +",
+    "date": "2026-08-08T18:00:00-05:00",
+    "dateDisplay": "08 AGO 2026",
+    "timeDisplay": "6 PM — hasta el amanecer",
+    "location": "Florencia, Caquetá",
+    "venue": "Secret Location (Mirador)",
+    "price": 10000,
+    "priceDisplay": "$10.000 COP",
+    "priceLabel": "Precio de lanzamiento",
+    "ticketUrl": "#tickets",
+    "themeId": "selvatica",
+    "lineup": [
+      { "name": "Live Sets & Acts", "category": "Formato", "genre": "Sonido en vivo — analógico + digital" },
+      { "name": "Hybrid Sets", "category": "Formato", "genre": "DJ + cajas de ritmos + sintes" },
+      { "name": "Experiencias Sensoriales", "category": "Ambiente", "genre": "Luz, naturaleza y estímulos visuales" }
+    ],
+    "description": "Un mirador secreto sobre la ciudad. Naturaleza salvaje, sonido diseñado a mano y la gente que hace que Florencia valga la pena. Bailamos desde que cae el sol hasta que amanece. Sin lineup confirmado todavía — pero el ambiente ya está asegurado."
+  },
+  {
+    "id": "monte",
+    "name": "FESTIVAL MONTE",
+    "tagline": "4 & 5 DICIEMBRE 2026 — DOS DÍAS DE FESTIVAL",
+    "date": "2026-12-04T12:00:00-05:00",
+    "dateDisplay": "04 & 05 DIC 2026",
+    "timeDisplay": "2 días de festival",
+    "location": "Florencia, Caquetá",
+    "venue": "Secret Location",
+    "price": 20000,
+    "priceDisplay": "$20.000 COP",
+    "priceLabel": "Creyentes — Pase de 2 días",
+    "ticketUrl": "#tickets",
+    "themeId": "monte",
+    "lineup": [
+      { "name": "Lineup por confirmar", "category": "Festival", "genre": "DJs locales, nacionales e internacionales" }
+    ],
+    "description": "Dos días en el monte. Un espacio inmerso en la naturaleza, construido para ir hondo en la música y en la comunidad. El festival más ambicioso que hemos hecho hasta ahora — más detalles muy pronto."
+  }
+]
+
