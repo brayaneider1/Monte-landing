@@ -54,9 +54,9 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 12px;
-  padding: 16px;
+  padding: 18px;
   color: #fff;
-  font-size: 22px;
+  font-size: 26px;
   letter-spacing: 8px;
   text-align: center;
   outline: none;
@@ -103,7 +103,7 @@
 
 .admin-tab {
   font-family: var(--font-technical);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1.5px;
   padding: 8px 14px;
   border-radius: 8px;
@@ -147,7 +147,7 @@
 .admin-section { display: flex; flex-direction: column; gap: 20px; }
 
 .admin-section-title {
-  font-size: 20px;
+  font-size: 23px;
   font-weight: 800;
   color: #fff;
   display: flex;
@@ -166,7 +166,7 @@
 }
 
 .admin-section-sub {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: rgba(255,255,255,0.55);
   margin: 0;
@@ -197,7 +197,7 @@
 
 .af-field label {
   font-family: var(--font-technical);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 2px;
   color: rgba(255,255,255,0.4);
   text-transform: uppercase;
@@ -210,9 +210,9 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
-  padding: 13px 14px;
+  padding: 15px 16px;
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
   font-family: var(--font-body);
   outline: none;
   transition: border-color 0.2s;
@@ -236,14 +236,14 @@
   background: rgba(var(--theme-accent-rgb), 0.06);
   border: 1px solid rgba(var(--theme-accent-rgb), 0.2);
   border-radius: 10px;
-  padding: 12px 16px;
-  font-size: 14px;
+  padding: 14px 18px;
+  font-size: 16px;
   color: rgba(255,255,255,0.7);
 }
 
 .af-preview-total {
   font-family: var(--font-technical);
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--theme-accent);
 }
@@ -286,7 +286,7 @@
 
 .admin-table th {
   font-family: var(--font-technical);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1.5px;
   color: rgba(255,255,255,0.4);
   padding: 12px 14px;
@@ -297,10 +297,11 @@
 }
 
 .admin-table td {
-  padding: 12px 14px;
+  padding: 13px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.8);
   vertical-align: middle;
+  font-size: 15px;
 }
 
 .admin-table tr:last-child td { border-bottom: none; }
