@@ -70,7 +70,7 @@
 
 .co-step {
   font-family: var(--font-technical);
-  font-size: 9px;
+  font-size: 11px;
   letter-spacing: 1px;
   padding: 4px 8px;
   border-radius: 20px;
@@ -123,7 +123,7 @@
 }
 
 .co-title {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 850;
   color: #fff;
   margin: 0;
@@ -131,7 +131,7 @@
 }
 
 .co-subtitle, .co-empty {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: rgba(255,255,255,0.6);
   margin: 0;
@@ -155,13 +155,13 @@
 
 .co-item-name {
   font-weight: 700;
-  font-size: 15px;
+  font-size: 17px;
   color: #fff;
 }
 
 .co-item-unit {
   font-family: var(--font-technical);
-  font-size: 11px;
+  font-size: 13px;
   color: rgba(255,255,255,0.45);
   letter-spacing: 0.5px;
 }
@@ -193,14 +193,14 @@
   min-width: 28px;
   text-align: center;
   font-family: var(--font-technical);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
 }
 
 .co-item-total {
   font-family: var(--font-technical);
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   color: var(--theme-accent);
   min-width: 72px;
@@ -233,7 +233,7 @@
 }
 
 .co-total-price {
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 900;
   color: var(--theme-accent);
   letter-spacing: 0;
@@ -246,7 +246,7 @@
 
 .co-field label {
   font-family: var(--font-technical);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 2px;
   color: rgba(255,255,255,0.5);
   text-transform: uppercase;
@@ -263,9 +263,9 @@
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
-  padding: 14px 16px;
+  padding: 16px 18px;
   color: #fff;
-  font-size: 15px;
+  font-size: 17px;
   font-family: var(--font-body);
   outline: none;
   transition: border-color 0.2s;
@@ -302,7 +302,7 @@
 .co-ps-row {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 16px;
   color: rgba(255,255,255,0.7);
 }
 
@@ -310,14 +310,14 @@
   padding-top: 10px;
   border-top: 1px solid rgba(255,255,255,0.08);
   font-weight: 800;
-  font-size: 16px;
+  font-size: 18px;
   color: #fff;
 }
 
 .co-ps-total span:last-child {
   color: var(--theme-accent);
   font-family: var(--font-technical);
-  font-size: 20px;
+  font-size: 24px;
 }
 
 /* ── WOMPI PLACEHOLDER ── */
@@ -427,9 +427,9 @@
   color: #000;
   border: none;
   border-radius: 30px;
-  padding: 16px 20px;
+  padding: 18px 20px;
   font-family: var(--font-technical);
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 800;
   letter-spacing: 1.5px;
   cursor: pointer;
@@ -454,9 +454,9 @@
   color: rgba(255,255,255,0.6);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 30px;
-  padding: 16px 20px;
+  padding: 18px 20px;
   font-family: var(--font-technical);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 1px;
   cursor: pointer;

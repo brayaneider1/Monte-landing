@@ -230,17 +230,15 @@ function LoopHome() {
                                         <span className="price-note">Cupos limitados. Sin sorpresas.</span>
                                     </div>
                                     <div className="ticket-qty-row">
-                                        <div className="ticket-qty-ctrl">
-                                            <button onClick={() => setTicketQty(q => Math.max(1, q - 1))}>−</button>
-                                            <span>{ticketQty}</span>
-                                            <button onClick={() => setTicketQty(q => Math.min(10, q + 1))}>+</button>
-                                        </div>
-                                        <button
-                                            className={`buy-ticket-btn ${addedFeedback ? 'added' : ''}`}
-                                            onClick={handleAddToCart}
+                                        {/* WhatsApp CTA — temporal mientras se habilita la pasarela de pagos */}
+                                        <a
+                                            href={activeEvent.ticketUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="buy-ticket-btn"
                                         >
-                                            {addedFeedback ? '✓ AGREGADO' : 'AGREGAR AL CARRITO →'}
-                                        </button>
+                                            COMPRAR ENTRADA →
+                                        </a>
                                     </div>
                                 </div>
                             </div>

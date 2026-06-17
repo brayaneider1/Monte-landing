@@ -11,7 +11,7 @@
     "price": 10000,
     "priceDisplay": "$10.000 COP",
     "priceLabel": "Precio de lanzamiento",
-    "ticketUrl": "#tickets",
+    "ticketUrl": "https://wa.me/573124524674?text=Hola!%20Quiero%20mi%20boleta%20para%20SELVÁTICA%20%F0%9F%8C%BF%20(8%20de%20Agosto)",
     "themeId": "selvatica",
     "lineup": [
       { "name": "Live Sets & Acts", "category": "Formato", "genre": "Sonido en vivo — analógico + digital" },
@@ -32,7 +32,7 @@
     "price": 20000,
     "priceDisplay": "$20.000 COP",
     "priceLabel": "Creyentes — Pase de 2 días",
-    "ticketUrl": "#tickets",
+    "ticketUrl": "https://wa.me/573124524674?text=Hola!%20Quiero%20asegurar%20mi%20boleta%20Creyentes%20para%20FESTIVAL%20MONTE%202026%20%F0%9F%8C%B2",
     "themeId": "monte",
     "lineup": [
       { "name": "Lineup por confirmar", "category": "Festival", "genre": "DJs locales, nacionales e internacionales" }

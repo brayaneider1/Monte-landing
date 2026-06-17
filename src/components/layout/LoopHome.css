@@ -101,7 +101,7 @@
     align-items: center;
     gap: 8px;
     font-family: var(--font-technical);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 3px;
     color: var(--theme-accent);
     border: 1px solid rgba(var(--theme-accent-rgb), 0.35);
@@ -216,7 +216,7 @@
 .brand-manifesto {
     max-width: 600px;
     margin: 0 auto 28px;
-    font-size: 17px;
+    font-size: 20px;
     line-height: 1.75;
     opacity: 0.9;
     font-family: var(--font-body);
@@ -228,14 +228,14 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 15px 30px;
+    padding: 16px 32px;
     border-radius: 40px;
     font-family: var(--font-technical);
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 700;
     letter-spacing: 2px;
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
     background: rgba(var(--theme-accent-rgb), 0.08);
     border: 1.5px solid rgba(var(--theme-accent-rgb), 0.4);
     color: var(--theme-accent);
@@ -324,7 +324,7 @@
 /* System metadata bar */
 .technical-metadata {
     font-family: var(--font-technical);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 2px;
     opacity: 0.55;
     display: flex;
@@ -357,7 +357,7 @@
 .event-pill {
     flex: 1;
     font-family: var(--font-technical);
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 800;
     letter-spacing: 2px;
     color: var(--theme-bg);
@@ -407,7 +407,7 @@
 }
 
 .spotlight-desc {
-    font-size: 16px;
+    font-size: 19px;
     line-height: 1.75;
     opacity: 0.9;
     max-width: 680px;
@@ -432,14 +432,14 @@
 
 .tile-label {
     font-family: var(--font-technical);
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 3px;
     opacity: 0.55;
     text-transform: uppercase;
 }
 
 .tile-value {
-    font-size: 20px;
+    font-size: 23px;
     font-weight: 800;
     line-height: 1.2;
     display: flex;
@@ -453,7 +453,7 @@
 
 .secret-badge {
     font-family: var(--font-technical);
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 2px;
     color: var(--theme-bg);
     background: var(--theme-neon);
@@ -465,7 +465,7 @@
 }
 
 .tile-label-sub {
-    font-size: 13px;
+    font-size: 15px;
     opacity: 0.7;
 }
 
@@ -486,7 +486,7 @@
 
 .c-item span {
     font-family: var(--font-technical);
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 900;
     line-height: 1;
     color: var(--theme-accent);
@@ -494,7 +494,7 @@
 }
 
 .c-item small {
-    font-size: 8px;
+    font-size: 10px;
     letter-spacing: 1px;
     opacity: 0.6;
     margin-top: 3px;
@@ -505,7 +505,7 @@
 
 .technical-sub {
     font-family: var(--font-technical);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 2px;
     opacity: 0.6;
     color: var(--theme-accent);
@@ -539,7 +539,7 @@
 
 .chip-cat {
     font-family: var(--font-technical);
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 2px;
     color: var(--theme-accent);
     font-weight: 700;
@@ -547,12 +547,12 @@
 
 .chip-name {
     font-weight: 800;
-    font-size: 16px;
+    font-size: 19px;
     letter-spacing: 0.3px;
 }
 
 .chip-genre {
-    font-size: 12px;
+    font-size: 14px;
     opacity: 0.6;
 }
 
@@ -588,7 +588,7 @@
 }
 
 .price-note {
-    font-size: 12px;
+    font-size: 14px;
     opacity: 0.6;
     margin-top: 2px;
 }
@@ -707,25 +707,25 @@
 
 .browser-date {
     font-family: var(--font-technical);
-    font-size: 11px;
+    font-size: 13px;
     color: var(--theme-accent);
     letter-spacing: 2px;
 }
 
 .browser-name {
-    font-size: 22px;
+    font-size: 25px;
     font-weight: 850;
     color: var(--theme-text);
     line-height: 1.2;
 }
 
 .browser-venue {
-    font-size: 13px;
+    font-size: 15px;
     opacity: 0.7;
 }
 
 .browser-price-info {
-    font-size: 13px;
+    font-size: 15px;
     opacity: 0.8;
     margin-top: 4px;
 }
@@ -739,7 +739,7 @@
 .browser-select-btn {
     margin-top: 8px;
     font-family: var(--font-technical);
-    font-size: 11px;
+    font-size: 13px;
     letter-spacing: 2px;
     color: var(--theme-accent);
     font-weight: 700;
@@ -751,7 +751,7 @@
 
 .section-title {
     font-family: var(--font-technical);
-    font-size: 17px;
+    font-size: 20px;
     letter-spacing: 5px;
     color: var(--theme-text);
     display: flex;
@@ -768,7 +768,7 @@
 }
 
 .section-intro-text {
-    font-size: 15px;
+    font-size: 17px;
     line-height: 1.7;
     opacity: 0.85;
     margin-bottom: 20px;
@@ -834,19 +834,19 @@
 }
 
 .item-info h5 {
-    font-size: 15px;
+    font-size: 17px;
     font-weight: 800;
     letter-spacing: 1px;
 }
 
 .item-sub {
-    font-size: 13px;
+    font-size: 15px;
     opacity: 0.65;
 }
 
 .item-price {
     font-family: var(--font-technical);
-    font-size: 16px;
+    font-size: 19px;
     font-weight: 800;
     color: var(--theme-accent);
 }
@@ -858,7 +858,7 @@
     background: rgba(var(--theme-text-rgb), 0.06);
     color: var(--theme-text);
     font-family: var(--font-technical);
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 750;
     letter-spacing: 1px;
     padding: 12px;
@@ -911,7 +911,7 @@
 
 .post-tag {
     font-family: var(--font-technical);
-    font-size: 9px;
+    font-size: 11px;
     letter-spacing: 3px;
     color: var(--theme-secondary);
     font-weight: 700;
@@ -920,27 +920,27 @@
 
 .post-date {
     font-family: var(--font-technical);
-    font-size: 10px;
+    font-size: 12px;
     opacity: 0.55;
     letter-spacing: 2px;
 }
 
 .blog-card-preview h4 {
-    font-size: 18px;
+    font-size: 21px;
     font-weight: 800;
     line-height: 1.35;
     color: var(--theme-text);
 }
 
 .blog-card-preview p {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.7;
     opacity: 0.78;
 }
 
 .read-more {
     font-family: var(--font-technical);
-    font-size: 12px;
+    font-size: 14px;
     color: var(--theme-accent);
     font-weight: 700;
     letter-spacing: 1px;
