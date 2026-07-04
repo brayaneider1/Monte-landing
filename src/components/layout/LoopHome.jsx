@@ -15,9 +15,18 @@ function LoopHome() {
     const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
     const [ticketQty, setTicketQty] = useState(1)
     const [addedFeedback, setAddedFeedback] = useState(false)
+    const [selectedOption, setSelectedOption] = useState(null)
 
     const { addToCart } = useCart()
     const audioRef = useRef(null)
+
+    useEffect(() => {
+        if (activeEvent && activeEvent.ticketOptions && activeEvent.ticketOptions.length > 0) {
+            setSelectedOption(activeEvent.ticketOptions[0])
+        } else {
+            setSelectedOption(null)
+        }
+    }, [activeEvent])
 
     useEffect(() => {
         const now = new Date()
@@ -61,7 +70,7 @@ function LoopHome() {
     }
 
     const handleAddToCart = () => {
-        addToCart(activeEvent, ticketQty)
+        addToCart(activeEvent, selectedOption, ticketQty)
         setAddedFeedback(true)
         setTimeout(() => setAddedFeedback(false), 2000)
     }
@@ -150,6 +159,23 @@ function LoopHome() {
                             <div className="tech-corner bottom-left" />
                             <div className="tech-corner bottom-right" />
 
+                            {activeEvent.id === 'selvatica' && (
+                                <>
+                                    <div className="selvatica-tribal tribal-top-right">
+                                        <svg viewBox="0 0 100 100" fill="none" stroke="var(--theme-secondary)" strokeWidth="1.2">
+                                            <path d="M10 0 C 30 15, 60 5, 80 40 C 90 55, 95 30, 100 50 C 95 65, 80 75, 70 60 C 50 40, 60 80, 20 90 C 15 95, 25 80, 10 70 C -5 60, 5 40, 25 40 C 40 40, 20 20, 10 0 Z" fill="rgba(0, 191, 255, 0.03)" />
+                                            <path d="M25 40 C 35 45, 45 35, 40 25 C 30 20, 20 30, 25 40 Z" fill="var(--theme-bg)" />
+                                        </svg>
+                                    </div>
+                                    <div className="selvatica-tribal tribal-bottom-left">
+                                        <svg viewBox="0 0 100 100" fill="none" stroke="var(--theme-secondary)" strokeWidth="1.2" style={{ transform: 'rotate(180deg)' }}>
+                                            <path d="M10 0 C 30 15, 60 5, 80 40 C 90 55, 95 30, 100 50 C 95 65, 80 75, 70 60 C 50 40, 60 80, 20 90 C 15 95, 25 80, 10 70 C -5 60, 5 40, 25 40 C 40 40, 20 20, 10 0 Z" fill="rgba(0, 191, 255, 0.03)" />
+                                            <path d="M25 40 C 35 45, 45 35, 40 25 C 30 20, 20 30, 25 40 Z" fill="var(--theme-bg)" />
+                                        </svg>
+                                    </div>
+                                </>
+                            )}
+
                             {/* System metadata bar */}
                             <div className="technical-metadata">
                                 <span>SYS // LOOP.RAVE PORTAL v2.6</span>
@@ -222,22 +248,84 @@ function LoopHome() {
                                     </div>
                                 </div>
 
+                                {/* Ticket Options / Combos Selector */}
+                                {activeEvent.ticketOptions && (
+                                    <div className="ticket-options-section">
+                                        <h4 className="technical-sub">// SELECCIONA TU ENTRADA / COMBO</h4>
+                                        <div className="ticket-options-grid">
+                                            {activeEvent.ticketOptions.map((opt) => (
+                                                <div
+                                                    key={opt.id}
+                                                    onClick={() => setSelectedOption(opt)}
+                                                    className={`ticket-option-card ${selectedOption?.id === opt.id ? 'active' : ''}`}
+                                                >
+                                                    <div className="option-radio-indicator">
+                                                        <div className="radio-dot" />
+                                                    </div>
+                                                    <div className="option-info-text">
+                                                        <span className="option-title-text">{opt.name}</span>
+                                                        <span className="option-desc-text">{opt.description}</span>
+                                                    </div>
+                                                    <span className="option-price-tag">{opt.priceDisplay}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Ticket CTA */}
                                 <div className="ticket-purchase-box">
                                     <div className="ticket-details">
-                                        <span className="price-label">{activeEvent.priceLabel}</span>
-                                        <span className="price-tag">{activeEvent.priceDisplay}</span>
-                                        <span className="price-note">Cupos limitados. Sin sorpresas.</span>
+                                        <span className="price-label">
+                                            {selectedOption ? selectedOption.name : activeEvent.priceLabel}
+                                        </span>
+                                        <span className="price-tag">
+                                            {selectedOption ? selectedOption.priceDisplay : activeEvent.priceDisplay}
+                                        </span>
+                                        <span className="price-note">
+                                            {selectedOption ? selectedOption.description : 'Cupos limitados. Sin sorpresas.'}
+                                        </span>
                                     </div>
                                     <div className="ticket-qty-row">
-                                        {/* WhatsApp CTA — temporal mientras se habilita la pasarela de pagos */}
+                                        {/* Quantity control */}
+                                        <div className="ticket-qty-ctrl">
+                                            <button type="button" onClick={() => setTicketQty(q => Math.max(1, q - 1))}>−</button>
+                                            <span>{ticketQty}</span>
+                                            <button type="button" onClick={() => setTicketQty(q => q + 1)}>+</button>
+                                        </div>
+
+                                        {/* Add to Cart button */}
+                                        <button
+                                            type="button"
+                                            onClick={handleAddToCart}
+                                            className={`buy-ticket-btn ${addedFeedback ? 'added' : ''}`}
+                                        >
+                                            {addedFeedback ? '✓ AGREGADO' : 'AÑADIR AL CARRITO'}
+                                        </button>
+
+                                        {/* WhatsApp Direct Option */}
                                         <a
-                                            href={activeEvent.ticketUrl}
+                                            href={(() => {
+                                                const base = "https://wa.me/573124524674"
+                                                const eventName = activeEvent.name
+                                                const dateStr = activeEvent.dateDisplay
+                                                let message = `Hola! Quiero mi boleta para ${eventName} 🌿 (${dateStr})`
+                                                if (selectedOption) {
+                                                    message = `Hola! Quiero el ${selectedOption.name} (${selectedOption.priceDisplay}) para ${eventName} 🌿 (${dateStr})`
+                                                }
+                                                return `${base}?text=${encodeURIComponent(message)}`
+                                            })()}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="buy-ticket-btn"
+                                            style={{
+                                                background: 'transparent',
+                                                border: '1.5px solid var(--theme-accent)',
+                                                color: 'var(--theme-accent)',
+                                                boxShadow: 'none'
+                                            }}
                                         >
-                                            COMPRAR ENTRADA →
+                                            WHATSAPP →
                                         </a>
                                     </div>
                                 </div>
@@ -280,7 +368,7 @@ function LoopHome() {
                     </div>
                 </section>
 
-                {/* ─── MERCH ─── */}
+                {/* ─── MERCH (Hidden for now) ───
                 <section className="merch-preview-section">
                     <h3 className="section-title"><span>LOOP.WARE</span></h3>
                     <p className="section-intro-text">
@@ -315,6 +403,7 @@ function LoopHome() {
                         ))}
                     </div>
                 </section>
+                */}
 
                 {/* ─── EDITORIAL ─── */}
                 <section className="blog-editorial-section">

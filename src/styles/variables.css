@@ -1,24 +1,24 @@
 /* LOOP.RAVE CSS Variable Design System */
 
 :root {
-  /* Default Theme: Selvática (Eco-Acid Cyberpunk) */
-  --theme-bg: #f4f3ef;                  /* Crema retro */
-  --theme-bg-rgb: 244, 243, 239;
-  --theme-text: #0d0e10;                /* Negro tinta */
-  --theme-text-rgb: 13, 14, 16;
-  --theme-accent: #ff5500;              /* Naranja brillante */
-  --theme-accent-rgb: 255, 85, 0;
-  --theme-secondary: #00d0ff;           /* Azul mariposa Morpho */
-  --theme-secondary-rgb: 0, 208, 255;
-  --theme-neon: #59ff00;                /* Verde cromo/ácido */
-  --theme-neon-rgb: 89, 255, 0;
+  /* Default Theme: Selvática (Eco-Acid Cyberpunk - Updated to Deep Dark Slate/Teal) */
+  --theme-bg: #050d12;                  /* Azul-grisáceo ultra oscuro con profundidad */
+  --theme-bg-rgb: 5, 13, 18;
+  --theme-text: #ffffff;                /* Blanco puro para máximo contraste minimalista */
+  --theme-text-rgb: 255, 255, 255;
+  --theme-accent: #ff4500;              /* Naranja neón / rojo-naranja limpio */
+  --theme-accent-rgb: 255, 69, 0;
+  --theme-secondary: #00bfff;           /* Azul Morpho eléctrico */
+  --theme-secondary-rgb: 0, 191, 255;
+  --theme-neon: #39ff14;                /* Verde ácido / neón para toques mínimos */
+  --theme-neon-rgb: 57, 255, 20;
   
-  --theme-particle-color: #59ff00;
-  --theme-grid-opacity: 0.12;
-  --theme-card-bg: rgba(255, 255, 255, 0.4);
-  --theme-card-border: rgba(13, 14, 16, 0.1);
-  --theme-glow: 0 0 15px rgba(255, 85, 0, 0.4);
-  --theme-glow-neon: 0 0 15px rgba(89, 255, 0, 0.5);
+  --theme-particle-color: #00bfff;      /* Partículas en azul Morpho para mayor profundidad */
+  --theme-grid-opacity: 0.05;
+  --theme-card-bg: rgba(7, 18, 25, 0.75); /* Tarjetas minimalistas oscuras translúcidas */
+  --theme-card-border: rgba(0, 191, 255, 0.12); /* Borde sutil azul Morpho */
+  --theme-glow: 0 0 25px rgba(0, 191, 255, 0.25);
+  --theme-glow-neon: 0 0 20px rgba(57, 255, 20, 0.3);
 
   /* Shared Layout Constants */
   --font-technical: 'Space Mono', 'Courier New', monospace;

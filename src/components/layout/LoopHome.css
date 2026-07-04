@@ -1086,3 +1086,62 @@
         max-width: 720px;
     }
 }
+
+/* ══════════════════════════════════════════
+   SELVÁTICA NEW THEME UPGRADES (Y2K Tribal & 3D Bubble Text)
+   ══════════════════════════════════════════ */
+.theme-selvatica .spotlight-title {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    color: var(--theme-accent);
+    /* Elegant minimalist 3D extrusion using Morpho blue */
+    text-shadow: 
+        1px 1px 0px #000,
+        -1px -1px 0px #000,
+        1px -1px 0px #000,
+        -1px 1px 0px #000,
+        2px 2px 0px var(--theme-secondary),
+        3px 3px 0px var(--theme-secondary),
+        4px 4px 10px rgba(0, 191, 255, 0.4);
+    letter-spacing: 2px;
+    font-weight: 950;
+    transition: text-shadow 0.3s ease;
+}
+
+.selvatica-tribal {
+    position: absolute;
+    width: clamp(100px, 25vw, 220px);
+    height: clamp(100px, 25vw, 220px);
+    opacity: 0.18; /* Extremely subtle and minimalist */
+    pointer-events: none;
+    z-index: 1;
+    filter: drop-shadow(0 0 15px rgba(0, 191, 255, 0.3));
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+}
+
+.tribal-top-right {
+    top: -20px;
+    right: -20px;
+}
+
+.tribal-bottom-left {
+    bottom: -20px;
+    left: -20px;
+}
+
+.event-card-spotlight:hover .tribal-top-right {
+    transform: scale(1.04) translate(-4px, 4px);
+}
+
+.event-card-spotlight:hover .tribal-bottom-left {
+    transform: scale(1.04) translate(4px, -4px);
+}
+
+.event-card-spotlight:hover .selvatica-tribal {
+    opacity: 0.32; /* Fade in slightly on hover */
+}
+
+.spotlight-body {
+    position: relative;
+    z-index: 2;
+}
