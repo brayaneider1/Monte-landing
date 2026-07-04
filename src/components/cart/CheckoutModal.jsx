@@ -108,18 +108,18 @@ export default function CheckoutModal({ onClose }) {
                 {items.length === 0
                   ? <p className="co-empty">No tienes entradas en el carrito.</p>
                   : items.map(item => (
-                    <div key={item.eventId} className="co-item">
+                    <div key={item.key || item.eventId} className="co-item">
                       <div className="co-item-info">
                         <span className="co-item-name">{item.eventName}</span>
                         <span className="co-item-unit">{formatCOP(item.priceUnit)} c/u</span>
                       </div>
                       <div className="co-item-qty">
-                        <button onClick={() => updateQty(item.eventId, item.qty - 1)}>−</button>
+                        <button onClick={() => updateQty(item.key || item.eventId, item.qty - 1)}>−</button>
                         <span>{item.qty}</span>
-                        <button onClick={() => updateQty(item.eventId, item.qty + 1)}>+</button>
+                        <button onClick={() => updateQty(item.key || item.eventId, item.qty + 1)}>+</button>
                       </div>
                       <div className="co-item-total">{formatCOP(item.qty * item.priceUnit)}</div>
-                      <button className="co-item-remove" onClick={() => removeFromCart(item.eventId)}>×</button>
+                      <button className="co-item-remove" onClick={() => removeFromCart(item.key || item.eventId)}>×</button>
                     </div>
                   ))
                 }

@@ -108,10 +108,10 @@ const ThreeParticles = ({ audioRef, isPlaying, theme = 'selvatica' }) => {
       }
       // selvatica (default)
       return {
-        primary:   '#59ff00',   // acid green
-        secondary: '#00d0ff',   // morpho blue
-        accent:    '#ff5500',   // neon orange
-        fog:       'rgba(244,243,239,0.06)',
+        primary:   '#39ff14',   // acid green
+        secondary: '#00bfff',   // morpho blue
+        accent:    '#ff4500',   // neon orange
+        fog:       'rgba(5,13,18,0.06)',
       }
     }
 

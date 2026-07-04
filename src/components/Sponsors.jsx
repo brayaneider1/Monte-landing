@@ -147,7 +147,7 @@ function Sponsors() {
                         <div className="lineup-category">
                             <h3>Próxima Fiesta: SELVÁTICA</h3>
                             <p><strong>Fecha:</strong> 8 de Agosto, 2026 (Jurazzic Park)</p>
-                            <p><strong>Lineup:</strong> Brenda B2B Maria Manuela • Krubim • Cathie V y DJs regionales</p>
+                            <p><strong>Lineup:</strong> Diavalo • + Nacionales • + Talento Regional</p>
                         </div>
                         <div className="lineup-category">
                             <h3>Gran Evento del Año: FESTIVAL MONTE</h3>

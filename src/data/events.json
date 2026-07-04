@@ -8,15 +8,45 @@
     "timeDisplay": "6 PM — hasta el amanecer",
     "location": "Florencia, Caquetá",
     "venue": "Secret Location (Mirador)",
-    "price": 10000,
-    "priceDisplay": "$10.000 COP",
-    "priceLabel": "Precio de lanzamiento",
+    "price": 28888,
+    "priceDisplay": "$28.888 COP",
+    "priceLabel": "Preventa — Etapa 1",
     "ticketUrl": "https://wa.me/573124524674?text=Hola!%20Quiero%20mi%20boleta%20para%20SELVÁTICA%20%F0%9F%8C%BF%20(8%20de%20Agosto)",
     "themeId": "selvatica",
+    "ticketOptions": [
+      {
+        "id": "preventa",
+        "name": "Preventa — Etapa 1",
+        "description": "Válido para 1 persona. Hasta julio 19.",
+        "price": 28888,
+        "priceDisplay": "$28.888 COP"
+      },
+      {
+        "id": "combo_2",
+        "name": "Combo 2 Personas",
+        "description": "Entrada para 2 personas.",
+        "price": 50000,
+        "priceDisplay": "$50.000 COP"
+      },
+      {
+        "id": "combo_4",
+        "name": "Combo 4 Personas",
+        "description": "Entrada para 4 personas.",
+        "price": 100000,
+        "priceDisplay": "$100.000 COP"
+      },
+      {
+        "id": "combo_3_media",
+        "name": "Combo 3 Personas + Media",
+        "description": "Entrada para 3 personas + media de aguardiente o ron.",
+        "price": 120000,
+        "priceDisplay": "$120.000 COP"
+      }
+    ],
     "lineup": [
-      { "name": "Live Sets & Acts", "category": "Formato", "genre": "Sonido en vivo — analógico + digital" },
-      { "name": "Hybrid Sets", "category": "Formato", "genre": "DJ + cajas de ritmos + sintes" },
-      { "name": "Experiencias Sensoriales", "category": "Ambiente", "genre": "Luz, naturaleza y estímulos visuales" }
+      { "name": "DIAVALO", "category": "Headliner", "genre": "Special Set" },
+      { "name": "+ Nacionales", "category": "Invitados", "genre": "Escena nacional" },
+      { "name": "+ Talento Regional", "category": "DJs locales", "genre": "Escena regional" }
     ],
     "description": "Un mirador secreto sobre la ciudad. Naturaleza salvaje, sonido diseñado a mano y la gente que hace que Florencia valga la pena. Bailamos desde que cae el sol hasta que amanece. Sin lineup confirmado todavía — pero el ambiente ya está asegurado."
   },
