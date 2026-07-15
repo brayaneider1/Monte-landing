@@ -218,6 +218,29 @@ export default function AdminPanel() {
         </button>
       </div>
 
+      <nav className="admin-bottom-nav">
+        <button className={`admin-nav-item ${tab === 0 ? 'active' : ''}`} onClick={() => setTab(0)}>
+          <svg viewBox="0 0 24 24"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span>VENTA</span>
+        </button>
+        <button className={`admin-nav-item ${tab === 1 ? 'active' : ''}`} onClick={() => setTab(1)}>
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span>ÓRDENES</span>
+        </button>
+        <button className={`admin-nav-item ${tab === 2 ? 'active' : ''}`} onClick={() => setTab(2)}>
+          <svg viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span>RESUMEN</span>
+        </button>
+        <button className={`admin-nav-item ${tab === 3 ? 'active' : ''}`} onClick={() => setTab(3)}>
+          <svg viewBox="0 0 24 24"><path d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm14 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span>ESCANEAR</span>
+        </button>
+        <button className={`admin-nav-item ${tab === 4 ? 'active' : ''}`} onClick={() => setTab(4)}>
+          <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          <span>CRM</span>
+        </button>
+      </nav>
+
       <div className="admin-body">
 
         {/* ─── TAB 0: VENTA EN MANO ─── */}
@@ -362,20 +385,20 @@ export default function AdminPanel() {
                         const mainItem = o.items?.[0]
                         return (
                           <tr key={o.id}>
-                            <td className="order-id-cell">{o.id}</td>
-                            <td>{o.buyer?.name || '—'}</td>
-                            <td>{o.buyer?.doc || '—'}</td>
-                            <td>{mainItem?.eventName || o.items?.map(i => i.eventName).join(', ') || '—'}</td>
-                            <td className="qty-cell">{o.items?.reduce((s, i) => s + i.qty, 0)}</td>
-                            <td>
+                            <td data-label="ORDEN" className="order-id-cell">{o.id}</td>
+                            <td data-label="NOMBRE">{o.buyer?.name || '—'}</td>
+                            <td data-label="DOC">{o.buyer?.doc || '—'}</td>
+                            <td data-label="EVENTO">{mainItem?.eventName || o.items?.map(i => i.eventName).join(', ') || '—'}</td>
+                            <td data-label="CANT" className="qty-cell">{o.items?.reduce((s, i) => s + i.qty, 0)}</td>
+                            <td data-label="MÉTODO">
                               <span className={`method-badge method-${o.method}`}>
                                 {o.method}
                               </span>
                             </td>
-                            <td className="total-cell">
+                            <td data-label="TOTAL" className="total-cell">
                               {formatCOP(o.items?.reduce((s, i) => s + (i.total || 0), 0))}
                             </td>
-                            <td className="date-cell">
+                            <td data-label="FECHA" className="date-cell">
                               {new Date(o.createdAt).toLocaleString('es-CO', {
                                 day: '2-digit', month: '2-digit',
                                 hour: '2-digit', minute: '2-digit',
@@ -475,12 +498,12 @@ export default function AdminPanel() {
                   <tbody>
                     {buyers.map(b => (
                       <tr key={b.id}>
-                        <td className="order-id-cell">{b.id}</td>
-                        <td>{b.name || '—'}</td>
-                        <td>{b.doc_type} {b.doc || '—'}</td>
-                        <td>{b.email || '—'}</td>
-                        <td>{b.phone}</td>
-                        <td>
+                        <td data-label="ID" className="order-id-cell">{b.id}</td>
+                        <td data-label="NOMBRE">{b.name || '—'}</td>
+                        <td data-label="DOCUMENTO">{b.doc_type} {b.doc || '—'}</td>
+                        <td data-label="EMAIL">{b.email || '—'}</td>
+                        <td data-label="TELÉFONO">{b.phone}</td>
+                        <td data-label="ACCIONES">
                           <button className="admin-btn-edit" onClick={() => openBuyerModal(b)}>Editar</button>
                           <button className="admin-btn-delete" onClick={() => handleDeleteBuyer(b.id)}>Borrar</button>
                         </td>
