@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getOrders, registerManualSale, formatCOP } from '../services/api'
 import eventsData from '../data/events.json'
-import QRScanner from './admin/QRScanner'
+import QRScanner from '../components/admin/QRScanner'
 import './AdminPanel.css'
 
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'

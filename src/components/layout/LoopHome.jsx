@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import ThreeParticles from '../ThreeParticles'
 import AudioPlayer from '../AudioPlayer'
+import CheckoutModal from '../CheckoutModal'
+import WelcomeModal from '../WelcomeModal'
 import { useCart } from '../../context/CartContext'
 import eventsData from '../../data/events.json'
 import './LoopHome.css'
@@ -16,6 +18,11 @@ function LoopHome() {
     const [ticketQty, setTicketQty] = useState(1)
     const [addedFeedback, setAddedFeedback] = useState(false)
     const [selectedOption, setSelectedOption] = useState(null)
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+    const [discountCode, setDiscountCode] = useState('')
+    const [toastMessage, setToastMessage] = useState(null)
+    const [toastVisible, setToastVisible] = useState(false)
+    const [showWelcomeModal, setShowWelcomeModal] = useState(false)
 
     const { addToCart } = useCart()
     const audioRef = useRef(null)
@@ -39,6 +46,12 @@ function LoopHome() {
             setActiveEvent(upcoming[0])
             setTheme(upcoming[0].themeId)
         }
+
+        if (!sessionStorage.getItem('loop_lead_phone')) {
+            setTimeout(() => {
+                setShowWelcomeModal(true)
+            }, 800)
+        }
     }, [])
 
     useEffect(() => {
@@ -61,6 +74,31 @@ function LoopHome() {
         }, 1000)
         return () => clearInterval(timer)
     }, [activeEvent])
+
+    // Social Proof Toasts
+    useEffect(() => {
+        const names = ['Juan_F', 'Maria_G', 'Carlos89', 'Andrea_T', 'Santi_Rave'];
+        const msgs = ['acaba de asegurar 2 boletas', 'compró Combo 4 Personas', 'se unió a SELVÁTICA', 'aseguró su entrada VIP'];
+        
+        const showToast = () => {
+            const name = names[Math.floor(Math.random() * names.length)];
+            const msg = msgs[Math.floor(Math.random() * msgs.length)];
+            setToastMessage(`🔥 [${name}] ${msg}`);
+            setToastVisible(true);
+            
+            setTimeout(() => {
+                setToastVisible(false);
+            }, 5000);
+        };
+
+        const interval = setInterval(() => {
+            if (!toastVisible) {
+                showToast();
+            }
+        }, 20000); // Every 20 seconds
+
+        return () => clearInterval(interval);
+    }, [toastVisible])
 
     const handleSelectEvent = (event) => {
         setActiveEvent(event)
@@ -117,33 +155,36 @@ function LoopHome() {
                             LOOP.RAVE
                         </h1>
 
-                        {/* Acid spines decoration */}
-                        <div className="acid-spines-row">
-                            {[...Array(7)].map((_, i) => (
-                                <div key={i} className="acid-spine" style={{ '--i': i }} />
-                            ))}
+                        <div className="hero-cta-wrapper" style={{ marginTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                            <motion.button
+                                onClick={() => {
+                                    const section = document.getElementById('tickets-section');
+                                    if (section) section.scrollIntoView({ behavior: 'smooth' });
+                                }}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                style={{ 
+                                    padding: '1.2rem 3rem', 
+                                    fontSize: '1.3rem', 
+                                    fontWeight: '900', 
+                                    background: 'var(--neon-green)', 
+                                    color: '#fff', 
+                                    border: 'none', 
+                                    borderRadius: '4px',
+                                    boxShadow: '0 0 20px rgba(0, 255, 0, 0.4)',
+                                    cursor: 'pointer',
+                                    fontFamily: 'Outfit, sans-serif',
+                                    letterSpacing: '1px'
+                                }}
+                            >
+                                ADQUIRIR ENTRADAS
+                            </motion.button>
                         </div>
-
-                        <p className="brand-manifesto">
-                            No somos solo una fiesta. Somos el espacio que le hacía falta a Florencia —
-                            donde el baile es un acto político, el sudor es colectivo y la música
-                            electrónica se vuelve ritual. Raros, diversos, radicalmente libres.
-                        </p>
-
-                        <motion.button
-                            onClick={toggleRaveMode}
-                            whileHover={{ scale: 1.04 }}
-                            whileTap={{ scale: 0.96 }}
-                            className={`rave-btn-hook ${raveMode ? 'active' : ''}`}
-                        >
-                            <span className="rave-icon">{raveMode ? '◉' : '○'}</span>
-                            {raveMode ? 'MODO RAVE ACTIVO — SINTIENDO EL BEAT' : 'ACTIVAR MODO RAVE'}
-                        </motion.button>
                     </motion.div>
                 </section>
 
                 {/* ─── PRÓXIMO EVENTO SPOTLIGHT ─── */}
-                <section className="active-event-spotlight">
+                <section className="active-event-spotlight" id="tickets-section">
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeEvent.id}
@@ -197,9 +238,10 @@ function LoopHome() {
                                     )}
                                 </div>
 
-                                <h2 className="spotlight-title">{activeEvent.name}</h2>
-
-                                <p className="spotlight-desc">{activeEvent.description}</p>
+                                <h2 className="spotlight-title" style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>{activeEvent.name}</h2>
+                                <p className="spotlight-desc" style={{ fontSize: '1.1rem', opacity: 0.9, maxWidth: '600px', margin: '0 auto 2rem auto' }}>
+                                    Experiencia inmersiva en el piedemonte.
+                                </p>
 
                                 {/* Date / Venue / Countdown grid */}
                                 <div className="event-time-grid">
@@ -252,6 +294,23 @@ function LoopHome() {
                                 {activeEvent.ticketOptions && (
                                     <div className="ticket-options-section">
                                         <h4 className="technical-sub">// SELECCIONA TU ENTRADA / COMBO</h4>
+                                        
+                                        {/* FOMO Bar */}
+                                        <div className="fomo-bar-container" style={{ marginBottom: '1.5rem' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--neon-green)', fontFamily: 'Inter, monospace', marginBottom: '5px' }}>
+                                                <span>ESTADO: ETAPA 1</span>
+                                                <span className="blink">85% VENDIDO</span>
+                                            </div>
+                                            <div style={{ width: '100%', height: '8px', background: 'rgba(0,255,0,0.1)', borderRadius: '4px', overflow: 'hidden' }}>
+                                                <motion.div 
+                                                    initial={{ width: 0 }}
+                                                    animate={{ width: '85%' }}
+                                                    transition={{ duration: 1.5, ease: 'easeOut' }}
+                                                    style={{ height: '100%', background: 'var(--neon-green)', boxShadow: '0 0 10px var(--neon-green)' }}
+                                                />
+                                            </div>
+                                        </div>
+
                                         <div className="ticket-options-grid">
                                             {activeEvent.ticketOptions.map((opt) => (
                                                 <div
@@ -274,59 +333,34 @@ function LoopHome() {
                                 )}
 
                                 {/* Ticket CTA */}
-                                <div className="ticket-purchase-box">
-                                    <div className="ticket-details">
-                                        <span className="price-label">
-                                            {selectedOption ? selectedOption.name : activeEvent.priceLabel}
+                                <div className="ticket-purchase-box" style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.4)', borderRadius: '8px', border: '1px solid var(--neon-green)', marginTop: '2rem' }}>
+                                    <div className="ticket-details" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                                            TOTAL
                                         </span>
-                                        <span className="price-tag">
-                                            {selectedOption ? selectedOption.priceDisplay : activeEvent.priceDisplay}
-                                        </span>
-                                        <span className="price-note">
-                                            {selectedOption ? selectedOption.description : 'Cupos limitados. Sin sorpresas.'}
-                                        </span>
+                                        <div className="price-tag-container" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                            <span className="price-tag" style={{ color: 'var(--neon-green)', fontSize: '1.5rem', fontWeight: 'bold' }}>
+                                                ${((selectedOption ? selectedOption.price : activeEvent.price) * ticketQty).toLocaleString()} COP
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="ticket-qty-row">
+
+                                    <div className="ticket-qty-row" style={{ display: 'flex', gap: '15px' }}>
                                         {/* Quantity control */}
-                                        <div className="ticket-qty-ctrl">
-                                            <button type="button" onClick={() => setTicketQty(q => Math.max(1, q - 1))}>−</button>
-                                            <span>{ticketQty}</span>
-                                            <button type="button" onClick={() => setTicketQty(q => q + 1)}>+</button>
+                                        <div className="ticket-qty-ctrl" style={{ display: 'flex', alignItems: 'center', border: '1px solid var(--neon-green)', padding: '0.5rem', borderRadius: '4px' }}>
+                                            <button type="button" onClick={() => setTicketQty(q => Math.max(1, q - 1))} style={{ background: 'none', border: 'none', color: 'var(--neon-green)', fontSize: '1.5rem', cursor: 'pointer', padding: '0 10px' }}>−</button>
+                                            <span style={{ fontSize: '1.2rem', fontWeight: 'bold', width: '30px', textAlign: 'center' }}>{ticketQty}</span>
+                                            <button type="button" onClick={() => setTicketQty(q => q + 1)} style={{ background: 'none', border: 'none', color: 'var(--neon-green)', fontSize: '1.5rem', cursor: 'pointer', padding: '0 10px' }}>+</button>
                                         </div>
 
-                                        {/* Add to Cart button */}
                                         <button
                                             type="button"
-                                            onClick={handleAddToCart}
-                                            className={`buy-ticket-btn ${addedFeedback ? 'added' : ''}`}
-                                        >
-                                            {addedFeedback ? '✓ AGREGADO' : 'AÑADIR AL CARRITO'}
-                                        </button>
-
-                                        {/* WhatsApp Direct Option */}
-                                        <a
-                                            href={(() => {
-                                                const base = "https://wa.me/573124524674"
-                                                const eventName = activeEvent.name
-                                                const dateStr = activeEvent.dateDisplay
-                                                let message = `Hola! Quiero mi boleta para ${eventName} 🌿 (${dateStr})`
-                                                if (selectedOption) {
-                                                    message = `Hola! Quiero el ${selectedOption.name} (${selectedOption.priceDisplay}) para ${eventName} 🌿 (${dateStr})`
-                                                }
-                                                return `${base}?text=${encodeURIComponent(message)}`
-                                            })()}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
+                                            onClick={() => setIsCheckoutOpen(true)}
                                             className="buy-ticket-btn"
-                                            style={{
-                                                background: 'transparent',
-                                                border: '1.5px solid var(--theme-accent)',
-                                                color: 'var(--theme-accent)',
-                                                boxShadow: 'none'
-                                            }}
+                                            style={{ flex: 1, background: 'var(--neon-green)', color: '#fff', border: 'none', fontSize: '1.2rem', fontWeight: 'bold', borderRadius: '4px', cursor: 'pointer' }}
                                         >
-                                            WHATSAPP →
-                                        </a>
+                                            ADQUIRIR AHORA
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -405,32 +439,17 @@ function LoopHome() {
                 </section>
                 */}
 
-                {/* ─── EDITORIAL ─── */}
+                {/* ─── EDITORIAL / MANIFIESTO ─── */}
                 <section className="blog-editorial-section">
-                    <h3 className="section-title"><span>DESDE LA PISTA</span></h3>
+                    <h3 className="section-title"><span>EL MANIFIESTO</span></h3>
                     <p className="section-intro-text">
-                        Textos, podcasts y conversaciones sobre la escena que estamos construyendo.
+                        Nuestra declaración de intenciones.
                     </p>
-                    <div className="blog-posts-grid">
-                        <div className="blog-card-preview">
-                            <span className="post-tag">CULTURA</span>
-                            <span className="post-date">10.JUNIO.2026</span>
-                            <h4>El techno como acto político en el Caquetá</h4>
-                            <p>
-                                Bailar aquí no es escapar. Es insistir. Es decir que existimos, que
-                                somos raros y libres y que la cultura electrónica también es nuestra.
-                            </p>
-                            <span className="read-more">LEER ↗</span>
-                        </div>
-                        <div className="blog-card-preview">
-                            <span className="post-tag">PODCAST</span>
-                            <span className="post-date">02.JUNIO.2026</span>
-                            <h4>LOOP #04 — Krubim: hipnosis en vivo</h4>
-                            <p>
-                                Ángel se sentó con su setup, cerró los ojos y dejó que la máquina
-                                hablara. Grabamos todo. Escucha este set y entiende de qué va esto.
-                            </p>
-                            <span className="read-more">ESCUCHAR ↗</span>
+                    <div className="blog-posts-grid" style={{ gridTemplateColumns: '1fr' }}>
+                        <div className="blog-card-preview" style={{ padding: '2rem', textAlign: 'center' }}>
+                            <h4 style={{ fontSize: '1.5rem', marginBottom: '1.5rem', lineHeight: '1.6' }}>
+                                Estamos cansados de ser oyentes, de reproducir identidades ajenas que responden a lo absurdo del consumo rápido, el cual carece de autenticidad y nos obliga a resistir las consecuencias en el avance de la creación y la consolidación de una comunidad real que se nutre y celebra.
+                            </h4>
                         </div>
                     </div>
                 </section>
@@ -454,6 +473,47 @@ function LoopHome() {
                 </div>
                 <span className="footer-copy">© 2026 LOOP.RAVE — Derechos de pista reservados</span>
             </footer>
+
+            {/* Social Proof Toast */}
+            <AnimatePresence>
+                {toastVisible && (
+                    <motion.div
+                        initial={{ opacity: 0, x: -50, y: 50 }}
+                        animate={{ opacity: 1, x: 0, y: 0 }}
+                        exit={{ opacity: 0, x: -50, y: 50 }}
+                        className="social-proof-toast"
+                        style={{
+                            position: 'fixed',
+                            bottom: '20px',
+                            left: '20px',
+                            background: 'rgba(0,0,0,0.85)',
+                            border: '1px solid var(--neon-green)',
+                            padding: '1rem',
+                            color: '#fff',
+                            fontFamily: 'Inter, monospace',
+                            fontSize: '0.85rem',
+                            borderRadius: '4px',
+                            zIndex: 9999,
+                            boxShadow: '0 0 15px rgba(0,255,0,0.2)'
+                        }}
+                    >
+                        {toastMessage}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            <CheckoutModal 
+                isOpen={isCheckoutOpen} 
+                onClose={() => setIsCheckoutOpen(false)}
+                selectedOption={selectedOption}
+                event={activeEvent}
+                ticketQty={ticketQty}
+            />
+
+            <WelcomeModal
+                isOpen={showWelcomeModal}
+                onClose={() => setShowWelcomeModal(false)}
+            />
         </div>
     )
 }

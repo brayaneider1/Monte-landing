@@ -1,0 +1,267 @@
+.checkout-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.checkout-modal-container {
+    background: var(--bg-glass, rgba(15, 15, 15, 0.95));
+    border: 1px solid var(--neon-green, #0f0);
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+    font-family: 'Outfit', sans-serif;
+    color: #fff;
+    border-radius: 8px;
+}
+
+/* Custom Scrollbar for Modal */
+.checkout-modal-container::-webkit-scrollbar {
+    width: 6px;
+}
+.checkout-modal-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+}
+.checkout-modal-container::-webkit-scrollbar-thumb {
+    background: var(--neon-green, #0f0);
+    border-radius: 3px;
+}
+
+.checkout-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: transparent;
+    border: none;
+    color: var(--neon-green, #0f0);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.checkout-close-btn:hover {
+    transform: scale(1.1);
+}
+
+.checkout-terminal-header {
+    font-family: 'Inter', monospace;
+    font-size: 0.8rem;
+    color: var(--neon-green, #0f0);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    padding-bottom: 0.5rem;
+}
+
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
+}
+
+.checkout-step h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+
+.ux-note {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
+    margin-bottom: 1.5rem;
+}
+
+.checkout-form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.checkout-form-grid .doc-group {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 10px;
+    grid-column: 1 / -1;
+}
+
+.discount-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+}
+
+@media (max-width: 480px) {
+    .checkout-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--neon-green, #0f0);
+    margin-bottom: 0.3rem;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+    color: #fff;
+    padding: 0.5rem 0;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color 0.3s, background 0.3s;
+    font-size: 1rem;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-bottom: 1px solid var(--neon-green, #0f0);
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.terminal-btn-primary {
+    width: 100%;
+    background: var(--neon-green, #0f0);
+    color: #000;
+    border: none;
+    padding: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: 1px;
+}
+
+.terminal-btn-primary:hover {
+    background: #fff;
+    box-shadow: 0 0 15px var(--neon-green, #0f0);
+}
+
+.payment-summary {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 1rem;
+    margin-bottom: 1.2rem;
+    border-left: 2px solid var(--neon-green, #0f0);
+}
+
+.payment-summary p {
+    margin: 0.3rem 0;
+    font-family: 'Inter', monospace;
+    font-size: 0.85rem;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.payment-btn {
+    width: 100%;
+    text-align: left;
+    padding: 0.6rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Outfit', sans-serif;
+    border-radius: 4px;
+}
+
+.payment-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--neon-green, #0f0);
+}
+
+.direct-transfer {
+    border-color: var(--neon-green, #0f0);
+}
+
+.direct-transfer .btn-benefit {
+    color: var(--neon-green, #0f0);
+}
+
+.wompi-btn {
+    border-color: var(--red, #ff3366);
+}
+
+.wompi-btn .btn-benefit {
+    color: var(--red, #ff3366);
+}
+
+.btn-title {
+    font-weight: bold;
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.5px;
+}
+
+.btn-benefit {
+    font-size: 0.7rem;
+    font-family: 'Inter', monospace;
+    opacity: 0.7;
+}
+
+.wompi-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.info-tooltip-icon {
+    position: absolute;
+    right: 1rem;
+    cursor: help;
+    font-size: 1.2rem;
+}
+
+.tooltip-text {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    width: 250px;
+    background: #111;
+    border: 1px solid var(--neon-green, #0f0);
+    padding: 0.8rem;
+    font-size: 0.8rem;
+    z-index: 10;
+    margin-bottom: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.back-btn {
+    background: transparent;
+    border: none;
+    color: #888;
+    margin-top: 1.5rem;
+    cursor: pointer;
+    font-family: 'Outfit', sans-serif;
+}
+
+.back-btn:hover {
+    color: #fff;
+}
