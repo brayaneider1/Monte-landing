@@ -46,8 +46,8 @@
         "id": "prueba_wompi",
         "name": "Ticket de Prueba Wompi (Temporal)",
         "description": "Boleto para hacer pruebas reales en producción.",
-        "price": 100,
-        "priceDisplay": "$100 COP"
+        "price": 1500,
+        "priceDisplay": "$1.500 COP"
       }
     ],
     "lineup": [

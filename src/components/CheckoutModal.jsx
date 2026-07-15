@@ -22,7 +22,7 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
 
     const finalPricePerTicket = basePrice - discountAmount;
     const totalWithoutFee = finalPricePerTicket * ticketQty;
-    const wompiFee = 3000;
+    const wompiFee = (selectedOption?.id === 'prueba_wompi') ? 0 : 3000;
     const totalWithFee = totalWithoutFee + wompiFee;
 
     const handleNextStep = async (e) => {
@@ -300,7 +300,7 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                                     <div className="wompi-container">
                                         <button className="payment-btn wompi-btn" onClick={handleWompiPayment} disabled={isProcessing}>
                                             <div className="btn-title">{isProcessing ? 'PROCESANDO...' : 'Pagar con Tarjeta (Wompi)'}</div>
-                                            <div className="btn-benefit">+ $3.000 COP (Recargo de la pasarela de pagos Wompi)</div>
+                                            {wompiFee > 0 && <div className="btn-benefit">+ $3.000 COP (Recargo de la pasarela de pagos Wompi)</div>}
                                         </button>
                                     </div>
                                 </div>

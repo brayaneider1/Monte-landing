@@ -312,7 +312,9 @@ function LoopHome() {
                                         </div>
 
                                         <div className="ticket-options-grid">
-                                            {activeEvent.ticketOptions.map((opt) => (
+                                            {activeEvent.ticketOptions
+                                                .filter(opt => opt.id !== 'prueba_wompi' || (typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('test') === '1'))
+                                                .map((opt) => (
                                                 <div
                                                     key={opt.id}
                                                     onClick={() => setSelectedOption(opt)}
