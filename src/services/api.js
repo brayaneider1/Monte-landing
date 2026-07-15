@@ -5,7 +5,8 @@
  * Otherwise → localStorage mock (for frontend-only dev)
  */
 
-const BASE = import.meta.env.VITE_API_URL || null
+const RAW_BASE = import.meta.env.VITE_API_URL || null
+const BASE = RAW_BASE ? RAW_BASE.replace(/\/$/, '') : null
 
 // ── MOCK STORAGE HELPERS ──────────────────────────────────────
 
