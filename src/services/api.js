@@ -64,6 +64,66 @@ export async function getOrders(pin) {
   return getMockOrders()
 }
 
+// ── ADMIN: BUYERS CRUD (CRM) ──────────────────────────────────
+
+export async function getBuyers(pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/admin/buyers`, {
+      headers: { 'X-Admin-Pin': pin },
+    })
+    if (!res.ok) throw new Error(`API error ${res.status}`)
+    return res.json()
+  }
+  return [] // Mock no implementado para buyers
+}
+
+export async function createBuyer(buyer, pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/admin/buyers`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
+      body: JSON.stringify(buyer),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.detail || `API error ${res.status}`)
+    }
+    return res.json()
+  }
+  return { id: Date.now(), ...buyer }
+}
+
+export async function updateBuyer(id, buyer, pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/admin/buyers/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
+      body: JSON.stringify(buyer),
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.detail || `API error ${res.status}`)
+    }
+    return res.json()
+  }
+  return { id, ...buyer }
+}
+
+export async function deleteBuyer(id, pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/admin/buyers/${id}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Pin': pin },
+    })
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}))
+      throw new Error(err.detail || `API error ${res.status}`)
+    }
+    return res.json()
+  }
+  return { success: true }
+}
+
 // ── ADMIN: REGISTER MANUAL SALE ───────────────────────────────
 
 export async function registerManualSale({ buyer, items, method, pin }) {

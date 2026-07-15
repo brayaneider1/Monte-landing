@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
-import { getOrders, registerManualSale, formatCOP } from '../services/api'
+import { getOrders, registerManualSale, formatCOP, getBuyers, createBuyer, updateBuyer, deleteBuyer } from '../services/api'
 import eventsData from '../data/events.json'
 import QRScanner from '../components/admin/QRScanner'
 import './AdminPanel.css'
 
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 
-const TABS = ['VENTA EN MANO', 'COMPRADORES', 'RESUMEN', 'ESCANEAR']
+const TABS = ['VENTA EN MANO', 'ÓRDENES', 'RESUMEN', 'ESCANEAR', 'COMPRADORES (CRM)']
 
 const emptyForm = {
   name: '', doc: '', email: '', phone: '',
@@ -21,29 +21,87 @@ export default function AdminPanel() {
   const [pinErr, setPinErr]   = useState('')
   const [tab, setTab]         = useState(0)
   const [orders, setOrders]   = useState([])
+  const [buyers, setBuyers]   = useState([])
   const [form, setForm]       = useState(emptyForm)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
   const [formErr, setFormErr] = useState('')
   const [filterEvt, setFilterEvt] = useState('all')
 
-  const handleLogin = (e) => {
-    e.preventDefault()
-    if (pin === ADMIN_PIN) {
-      setAuthed(true)
-      loadOrders()
-    } else {
-      setPinErr('PIN incorrecto.')
-      setPin('')
-    }
-  }
+  // Buyers CRUD State
+  const emptyBuyerForm = { id: null, name: '', doc_type: 'CC', doc: '', email: '', phone: '' }
+  const [buyerModalOpen, setBuyerModalOpen] = useState(false)
+  const [buyerForm, setBuyerForm] = useState(emptyBuyerForm)
+  const [buyerErr, setBuyerErr] = useState('')
 
   const loadOrders = async () => {
     try {
-      const data = await getOrders(ADMIN_PIN)
+      const data = await getOrders(pin)
       setOrders(data)
-    } catch { setOrders([]) }
+    } catch (err) {
+      setPinErr('PIN incorrecto o error de red.')
+      setAuthed(false)
+    }
   }
+
+  const loadBuyers = async () => {
+    try {
+      const data = await getBuyers(pin)
+      setBuyers(data)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setPinErr('')
+    try {
+      await loadOrders()
+      await loadBuyers()
+      setAuthed(true)
+    } catch (err) {
+      // ya manejado en loadOrders
+    }
+  }
+
+  // --- BUYER CRUD HANDLERS ---
+  const handleBuyerForm = (e) => {
+    setBuyerForm({ ...buyerForm, [e.target.name]: e.target.value })
+  }
+  
+  const saveBuyer = async (e) => {
+    e.preventDefault()
+    setBuyerErr('')
+    try {
+      if (buyerForm.id) {
+        await updateBuyer(buyerForm.id, buyerForm, pin)
+      } else {
+        await createBuyer(buyerForm, pin)
+      }
+      setBuyerModalOpen(false)
+      loadBuyers()
+    } catch (err) {
+      setBuyerErr(err.message)
+    }
+  }
+
+  const handleDeleteBuyer = async (id) => {
+    if (!confirm('¿Estás seguro de eliminar este comprador? (Puede fallar si tiene órdenes asociadas)')) return
+    try {
+      await deleteBuyer(id, pin)
+      loadBuyers()
+    } catch (err) {
+      alert(err.message)
+    }
+  }
+
+  const openBuyerModal = (buyer = emptyBuyerForm) => {
+    setBuyerForm(buyer)
+    setBuyerErr('')
+    setBuyerModalOpen(true)
+  }
+  // ---------------------------
 
   useEffect(() => {
     if (authed && tab > 0) loadOrders()
@@ -374,12 +432,102 @@ export default function AdminPanel() {
         {/* ─── TAB 3: ESCANEAR ─── */}
         {tab === 3 && (
           <div className="admin-section">
-            <h2 className="admin-section-title" style={{textAlign: 'center'}}>Escáner de Tickets VIP</h2>
+            <h2 className="admin-section-title">Escanear Códigos QR</h2>
             <QRScanner pin={pin} />
           </div>
         )}
 
+        {/* ─── TAB 4: COMPRADORES (CRM) ─── */}
+        {tab === 4 && (
+          <div className="admin-section">
+            <div className="admin-list-header">
+              <h2 className="admin-section-title" style={{ margin: 0 }}>
+                Directorio de Compradores
+                <span className="admin-count">{buyers.length}</span>
+              </h2>
+              <button className="admin-btn-primary" onClick={() => openBuyerModal()} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
+                + NUEVO
+              </button>
+            </div>
+
+            {buyers.length === 0 ? (
+              <p className="admin-empty">No hay compradores registrados.</p>
+            ) : (
+              <div className="admin-table-wrap">
+                <table className="admin-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>NOMBRE</th>
+                      <th>DOCUMENTO</th>
+                      <th>EMAIL</th>
+                      <th>TELÉFONO</th>
+                      <th>ACCIONES</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {buyers.map(b => (
+                      <tr key={b.id}>
+                        <td className="order-id-cell">{b.id}</td>
+                        <td>{b.name || '—'}</td>
+                        <td>{b.doc_type} {b.doc || '—'}</td>
+                        <td>{b.email || '—'}</td>
+                        <td>{b.phone}</td>
+                        <td>
+                          <button className="admin-btn-edit" onClick={() => openBuyerModal(b)}>Editar</button>
+                          <button className="admin-btn-delete" onClick={() => handleDeleteBuyer(b.id)}>Borrar</button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* ─── MODAL COMPRADOR ─── */}
+      {buyerModalOpen && (
+        <div className="buyer-modal-overlay">
+          <div className="buyer-modal">
+            <h3>{buyerForm.id ? 'Editar Comprador' : 'Nuevo Comprador'}</h3>
+            <form onSubmit={saveBuyer}>
+              <div className="af-grid">
+                <div className="af-field">
+                  <label>Nombre</label>
+                  <input name="name" value={buyerForm.name} onChange={handleBuyerForm} />
+                </div>
+                <div className="af-field">
+                  <label>Tipo Doc</label>
+                  <select name="doc_type" value={buyerForm.doc_type} onChange={handleBuyerForm}>
+                    <option value="CC">CC</option>
+                    <option value="CE">CE</option>
+                    <option value="PASSPORT">Pasaporte</option>
+                  </select>
+                </div>
+                <div className="af-field">
+                  <label>Documento</label>
+                  <input name="doc" value={buyerForm.doc} onChange={handleBuyerForm} />
+                </div>
+                <div className="af-field">
+                  <label>Teléfono *</label>
+                  <input name="phone" required value={buyerForm.phone} onChange={handleBuyerForm} />
+                </div>
+                <div className="af-field">
+                  <label>Email</label>
+                  <input name="email" type="email" value={buyerForm.email} onChange={handleBuyerForm} />
+                </div>
+              </div>
+              {buyerErr && <p className="admin-error">{buyerErr}</p>}
+              <div className="buyer-modal-actions">
+                <button type="button" onClick={() => setBuyerModalOpen(false)}>Cancelar</button>
+                <button type="submit" className="admin-btn-primary">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
