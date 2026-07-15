@@ -1,0 +1,51 @@
+.qr-scanner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #0a1a12;
+  border-radius: 8px;
+  min-height: 400px;
+}
+
+.qr-reader {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+}
+
+#qr-reader img {
+  display: none !important;
+}
+
+.scan-result {
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 400px;
+  animation: popIn 0.3s ease-out;
+}
+
+.scan-result.success {
+  background-color: rgba(136, 255, 0, 0.1);
+  border: 2px solid #88ff00;
+}
+
+.scan-result.error {
+  background-color: rgba(255, 68, 68, 0.1);
+  border: 2px solid #ff4444;
+}
+
+.result-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

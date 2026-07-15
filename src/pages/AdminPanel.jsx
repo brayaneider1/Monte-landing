@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
 import { getOrders, registerManualSale, formatCOP } from '../services/api'
 import eventsData from '../data/events.json'
+import QRScanner from './admin/QRScanner'
 import './AdminPanel.css'
 
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 
-const TABS = ['VENTA EN MANO', 'COMPRADORES', 'RESUMEN']
+const TABS = ['VENTA EN MANO', 'COMPRADORES', 'RESUMEN', 'ESCANEAR']
 
 const emptyForm = {
   name: '', doc: '', email: '', phone: '',
@@ -367,6 +368,14 @@ export default function AdminPanel() {
             >
               ACTUALIZAR DATOS
             </button>
+          </div>
+        )}
+
+        {/* ─── TAB 3: ESCANEAR ─── */}
+        {tab === 3 && (
+          <div className="admin-section">
+            <h2 className="admin-section-title" style={{textAlign: 'center'}}>Escáner de Tickets VIP</h2>
+            <QRScanner pin={pin} />
           </div>
         )}
 

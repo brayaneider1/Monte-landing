@@ -96,6 +96,53 @@ export async function registerManualSale({ buyer, items, method, pin }) {
   return order
 }
 
+// ── ADMIN: CHECK-IN ORDER (QR SCANNER) ────────────────────────
+
+export async function checkInOrder(orderRef, pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/admin/orders/${orderRef}/check-in`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${pin}`, 
+        'X-Admin-Pin': pin,
+      },
+    })
+    
+    // Si no es 2xx, extraer mensaje de error del backend
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}))
+      throw new Error(errData.detail || `Error al verificar orden (${res.status})`)
+    }
+    
+    return res.json()
+  }
+
+  // MOCK PARA DESARROLLO LOCAL
+  await fakeDelay(400)
+  const orders = getMockOrders()
+  const orderIndex = orders.findIndex(o => o.id === orderRef || o.order_ref === orderRef)
+  
+  if (orderIndex === -1) throw new Error("Orden no encontrada en base local")
+  
+  const order = orders[orderIndex]
+  
+  if (order.is_checked_in) {
+    throw new Error("ALERTA: Este ticket ya fue usado previamente")
+  }
+  
+  orders[orderIndex].is_checked_in = true
+  saveMockOrders(orders)
+  
+  const ticketsCount = order.items?.reduce((acc, it) => acc + (it.qty || 1), 0) || 1
+  return {
+    success: true,
+    message: `Ingreso Exitoso (${ticketsCount} personas)`,
+    buyer_name: order.buyer?.name || 'Comprador Local',
+    tickets_count: ticketsCount
+  }
+}
+
 // ── ADMIN: CLEAR ALL ORDERS (dev helper) ─────────────────────
 
 export function clearMockOrders() {
