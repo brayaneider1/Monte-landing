@@ -41,6 +41,13 @@
         "description": "Entrada para 3 personas + media de aguardiente o ron.",
         "price": 120000,
         "priceDisplay": "$120.000 COP"
+      },
+      {
+        "id": "prueba_wompi",
+        "name": "Ticket de Prueba Wompi (Temporal)",
+        "description": "Boleto para hacer pruebas reales en producción.",
+        "price": 100,
+        "priceDisplay": "$100 COP"
       }
     ],
     "lineup": [
