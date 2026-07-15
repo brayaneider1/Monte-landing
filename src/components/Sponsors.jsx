@@ -4,37 +4,37 @@ import './Sponsors.css'
 function Sponsors() {
     const sponsorshipPackages = [
         {
-            tier: 'PLATINUM',
-            price: '$500,000 COP',
+            tier: 'NIVEL 3 — PRODUCCIÓN EDITORIAL PREMIUM',
+            price: '$200,000 COP',
+            target: 'Marcas de Ropa & Lifestyle',
             benefits: [
-                'Logo principal en todos los materiales',
-                'Stand exclusivo en el evento',
-                'Menciones en redes sociales (15+ posts)',
-                '7 entradas VIP',
-                'Activación de marca conjunta',
-                'Branding en escenario principal'
+                'Visten a los DJs y al Staff del evento.',
+                'El equipo de media graba material audiovisual cinematográfico durante el evento.',
+                'Entregable: Banco de contenido publicitario crudo de alta gama (estilo Berlín) con todos los derechos para sus Ads.',
+                '4 Entradas de cortesía.'
             ]
         },
         {
-            tier: 'GOLD',
-            price: '$250,000 COP',
+            tier: 'NIVEL 2 — INTERCAMBIO DE AUDIENCIA',
+            price: 'SWAP DE DATOS',
+            target: 'Barberías & Tatuadores',
             benefits: [
-                'Video promocional de su establecimiento',
-                'Logo en materiales principales',
-                'Stand en zona comercial',
-                'Menciones en redes sociales (8+ posts)',
-                '4 entradas VIP',
-                'Branding en áreas comunes'
+                'Sistema de códigos QR en sus locales.',
+                'Descuentos exclusivos para clientes que se hagan el "Corte/Tatuaje Selvática".',
+                'Intercambio mutuo de bases de datos para remarketing.',
+                '2 Entradas de cortesía.'
             ]
         },
         {
-            tier: 'SILVER',
-            price: '$150,000 COP',
+            tier: 'NIVEL 1 — INVERSIÓN PURA Y EXPERIENCIA',
+            price: 'Desde $400,000 COP',
+            target: 'Licores & Grandes Marcas',
             benefits: [
-                'Inclusión en todos los materiales',
-                '2 boletas VIP',
-                'Menciones en redes sociales',
-                'Branding digital'
+                'Exclusividad de producto en barras.',
+                'Experiencia "Presented by" y branding sutil.',
+                'Micro-influencers generando contenido orgánico con el producto.',
+                'CERO publicidad ruidosa o invasiva en el Main Stage.',
+                '10 Entradas VIP.'
             ]
         }
     ]
@@ -76,12 +76,12 @@ function Sponsors() {
                     transition={{ duration: 0.8 }}
                 >
                     <h1 className="sponsors-title">
-                        <span className="title-outline-sponsors">PROPUESTA</span>
-                        <span className="title-fill-sponsors">PROPUESTA</span>
+                        <span className="title-outline-sponsors">INVERSIONISTAS</span>
+                        <span className="title-fill-sponsors">DE CULTURA</span>
                     </h1>
-                    <p className="sponsors-subtitle">COMERCIAL LOOP.RAVE 2026</p>
+                    <p className="sponsors-subtitle">DOSSIER LOOP.RAVE 2026</p>
                     <p className="sponsors-description">
-                        Únete a LOOP.RAVE como patrocinador y conecta tu marca con la comunidad de música electrónica más activa de Florencia. Potencia la visibilidad de tu negocio a través de activaciones inmersivas y alcance digital garantizado.
+                        No vendemos logos, vendemos la atención de 500 jóvenes que marcan tendencia. Únete a LOOP.RAVE y conecta tu marca de forma orgánica, inmersiva y sin ruido corporativo.
                     </p>
                 </motion.div>
 
@@ -114,17 +114,18 @@ function Sponsors() {
                     initial="hidden"
                     animate="visible"
                 >
-                    <h2 className="section-title">💎 PAQUETES DE PATROCINIO</h2>
+                    <h2 className="section-title">💎 NIVELES DE INVERSIÓN</h2>
                     <div className="packages-grid">
                         {sponsorshipPackages.map((pkg, index) => (
                             <motion.div
                                 key={index}
-                                className={`package-card package-${pkg.tier.toLowerCase()}`}
+                                className={`package-card package-level-${index + 1}`}
                                 variants={itemVariants}
                                 whileHover={{ scale: 1.03, y: -10 }}
                             >
                                 <div className="package-tier">{pkg.tier}</div>
                                 <div className="package-price">{pkg.price}</div>
+                                <div className="package-target" style={{ fontSize: '0.9em', color: 'var(--neon-green)', marginBottom: '1rem', fontWeight: 'bold' }}>Target: {pkg.target}</div>
                                 <ul className="package-benefits">
                                     {pkg.benefits.map((benefit, idx) => (
                                         <li key={idx}>{benefit}</li>

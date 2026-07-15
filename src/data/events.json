@@ -8,7 +8,7 @@
     "timeDisplay": "6 PM — hasta el amanecer",
     "location": "Florencia, Caquetá",
     "venue": "Secret Location (Mirador)",
-    "price": 28888,
+    "price": 29000,
     "priceDisplay": "$28.888 COP",
     "priceLabel": "Preventa — Etapa 1",
     "ticketUrl": "https://wa.me/573124524674?text=Hola!%20Quiero%20mi%20boleta%20para%20SELVÁTICA%20%F0%9F%8C%BF%20(8%20de%20Agosto)",
@@ -18,7 +18,7 @@
         "id": "preventa",
         "name": "Preventa — Etapa 1",
         "description": "Válido para 1 persona. Hasta julio 19.",
-        "price": 28888,
+        "price": 29000,
         "priceDisplay": "$28.888 COP"
       },
       {
