@@ -13,12 +13,21 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
         discountCode: '', 
         phone: '' 
     });
+    const [attendees, setAttendees] = useState([]);
     const [showTooltip, setShowTooltip] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
 
     // Calc base price based on options vs event price
     const basePrice = selectedOption ? selectedOption.price : event.price;
     const [discountAmount, setDiscountAmount] = useState(0);
+
+    const ticketName = selectedOption ? selectedOption.name : 'Boleta General';
+    const multiplier = selectedOption ? (
+        selectedOption.id.includes('combo_2') ? 2 :
+        selectedOption.id.includes('combo_3') ? 3 :
+        selectedOption.id.includes('combo_4') ? 4 : 1
+    ) : 1;
+    const totalPersons = multiplier * ticketQty;
 
     const finalPricePerTicket = basePrice - discountAmount;
     const totalWithoutFee = finalPricePerTicket * ticketQty;
@@ -38,6 +47,10 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                 })
             }).catch(err => console.error("Error saving lead:", err));
 
+            // Initialize attendees array
+            setAttendees(Array.from({ length: totalPersons }, () => ({
+                name: '', email: '', phone: '', ticket_type: ticketName
+            })));
             setStep(2);
         }
     };
@@ -69,9 +82,12 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
     };
 
     const handleWompiPayment = async () => {
-        if (!leadData.name || !leadData.lastName) {
-            alert('Por favor, completa tu Nombre y Apellido.');
-            return;
+        // Validar que todos los asistentes tengan datos
+        for (let i = 0; i < attendees.length; i++) {
+            if (!attendees[i].name || !attendees[i].email) {
+                alert(`Por favor completa Nombre y Correo para el Asistente #${i + 1}`);
+                return;
+            }
         }
 
         setIsProcessing(true);
@@ -83,8 +99,8 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                 event_slug: "selvatica-2026",
                 buyer: {
                     phone: leadData.phone,
-                    name: `${leadData.name} ${leadData.lastName}`.trim(),
-                    email: leadData.email.trim()
+                    name: attendees[0].name.trim(),
+                    email: attendees[0].email.trim()
                 },
                 items: [
                     {
@@ -92,6 +108,12 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                         quantity: ticketQty
                     }
                 ],
+                attendees: attendees.map(a => ({
+                    name: a.name.trim(),
+                    email: a.email.trim(),
+                    phone: a.phone || leadData.phone,
+                    ticket_type: a.ticket_type
+                })),
                 payment_method: "wompi"
             };
 
@@ -162,19 +184,59 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
         }
     };
 
-    const handleTransferPayment = () => {
-        if (!leadData.name || !leadData.lastName || !leadData.email) {
-            alert('Por favor, completa tu nombre, apellido y correo.');
-            return;
+    const handleTransferPayment = async () => {
+        // Validar asistentes
+        for (let i = 0; i < attendees.length; i++) {
+            if (!attendees[i].name || !attendees[i].email) {
+                alert(`Por favor completa Nombre y Correo para el Asistente #${i + 1}`);
+                return;
+            }
         }
         
-        const base = "https://wa.me/573124524674";
-        const dateStr = event.dateDisplay;
-        const ticketName = selectedOption ? selectedOption.name : 'Boleta General';
-        const message = `Hola! Soy ${leadData.name} ${leadData.lastName}. Mi WhatsApp registrado es ${leadData.phone}. Quiero pagar por transferencia ${ticketQty}x ${ticketName} para ${event.name} 🌿 (${dateStr}). Total: $${totalWithoutFee.toLocaleString()} COP.`;
-        
-        window.open(`${base}?text=${encodeURIComponent(message)}`, '_blank');
-        onClose();
+        setIsProcessing(true);
+        try {
+            const ticketType = selectedOption ? selectedOption.id : 'general';
+            const payload = {
+                event_slug: "selvatica-2026",
+                buyer: {
+                    phone: leadData.phone,
+                    name: attendees[0].name.trim(),
+                    email: attendees[0].email.trim()
+                },
+                items: [{ ticket_type: ticketType, quantity: ticketQty }],
+                attendees: attendees.map(a => ({
+                    name: a.name.trim(),
+                    email: a.email.trim(),
+                    phone: a.phone || leadData.phone,
+                    ticket_type: a.ticket_type
+                })),
+                payment_method: "transferencia"
+            };
+            if (leadData.discountCode.trim()) {
+                payload.discount_code = leadData.discountCode.trim().toUpperCase();
+            }
+
+            const response = await fetch('https://loop-core-production.up.railway.app/api/v1/orders/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) throw new Error('Error al registrar orden');
+            const data = await response.json();
+
+            const base = "https://wa.me/573124524674";
+            const dateStr = event.dateDisplay;
+            
+            let attendeesText = attendees.map((a, i) => `Asistente ${i+1}: ${a.name} (${a.email})`).join('%0A');
+            const message = `Hola! Soy ${attendees[0].name}. Mi WhatsApp es ${leadData.phone}. Quiero pagar por transferencia la orden *${data.order_ref}*.%0A%0AHe comprado ${ticketQty}x ${ticketName} para ${event.name} 🌿.%0ATotal a pagar: $${totalWithoutFee.toLocaleString()} COP.%0A%0A*DATOS ASISTENTES:*%0A${attendeesText}`;
+            
+            window.open(`${base}?text=${message}`, '_blank');
+            onClose();
+        } catch (err) {
+            alert('Ocurrió un error registrando tu orden para transferencia. Intenta de nuevo.');
+            setIsProcessing(false);
+        }
     };
 
     // Reset step when modal closes
@@ -230,41 +292,59 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                                 <h3 style={{ marginBottom: '1rem', color: 'var(--neon-green)' }}>DATOS Y PAGO</h3>
                                 
                                 <form onSubmit={(e) => e.preventDefault()}>
+                                    {attendees.map((att, index) => (
+                                        <div key={index} className="checkout-form-grid" style={{ marginBottom: '1.5rem', background: 'rgba(255,255,255,0.05)', padding: '1rem', borderRadius: '8px' }}>
+                                            <h4 style={{ color: 'var(--neon-green)', gridColumn: '1 / -1', marginBottom: '0.5rem' }}>Asistente {index + 1}</h4>
+                                            
+                                            {index > 0 && (
+                                                <button 
+                                                    type="button" 
+                                                    onClick={() => {
+                                                        const newAtts = [...attendees];
+                                                        newAtts[index] = { ...newAtts[0], ticket_type: newAtts[index].ticket_type };
+                                                        setAttendees(newAtts);
+                                                    }}
+                                                    style={{ gridColumn: '1 / -1', background: 'transparent', border: '1px solid var(--neon-green)', color: 'var(--neon-green)', padding: '0.5rem', borderRadius: '4px', cursor: 'pointer', marginBottom: '1rem', fontSize: '0.9rem' }}
+                                                >
+                                                    Autorellenar con mis datos
+                                                </button>
+                                            )}
+
+                                            <div className="form-group full-width">
+                                                <label>NOMBRE COMPLETO</label>
+                                                <input 
+                                                    type="text" 
+                                                    required 
+                                                    value={att.name}
+                                                    onChange={(e) => {
+                                                        const newAtts = [...attendees];
+                                                        newAtts[index].name = e.target.value;
+                                                        setAttendees(newAtts);
+                                                    }}
+                                                    placeholder="Ej. Neo Anderson"
+                                                    autoFocus={index === 0}
+                                                />
+                                            </div>
+
+                                            <div className="form-group full-width" style={{ marginTop: '1rem' }}>
+                                                <label>CORREO ELECTRÓNICO (Para enviar tu boleta)</label>
+                                                <input 
+                                                    type="email" 
+                                                    required 
+                                                    value={att.email}
+                                                    onChange={(e) => {
+                                                        const newAtts = [...attendees];
+                                                        newAtts[index].email = e.target.value;
+                                                        setAttendees(newAtts);
+                                                    }}
+                                                    placeholder="Ej. neo@matrix.com"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
+
                                     <div className="checkout-form-grid">
-                                        <div className="form-group">
-                                            <label>NOMBRE</label>
-                                            <input 
-                                                type="text" 
-                                                required 
-                                                value={leadData.name}
-                                                onChange={(e) => setLeadData({...leadData, name: e.target.value})}
-                                                placeholder="Ej. Neo"
-                                                autoFocus
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>APELLIDO</label>
-                                            <input 
-                                                type="text" 
-                                                required 
-                                                value={leadData.lastName}
-                                                onChange={(e) => setLeadData({...leadData, lastName: e.target.value})}
-                                                placeholder="Ej. Anderson"
-                                            />
-                                        </div>
-
-                                        <div className="form-group full-width" style={{ marginTop: '1rem' }}>
-                                            <label>CORREO ELECTRÓNICO (Para enviar tu boleta)</label>
-                                            <input 
-                                                type="email" 
-                                                required 
-                                                value={leadData.email}
-                                                onChange={(e) => setLeadData({...leadData, email: e.target.value})}
-                                                placeholder="Ej. neo@matrix.com"
-                                            />
-                                        </div>
-
-                                        <div className="form-group full-width" style={{ marginTop: '1rem' }}>
+                                        <div className="form-group full-width" style={{ marginTop: '0.5rem' }}>
                                             <label>CÓDIGO DE ACCESO / DESCUENTO (OPCIONAL)</label>
                                             <div className="discount-group">
                                                 <input 
