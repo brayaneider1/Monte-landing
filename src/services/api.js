@@ -24,7 +24,7 @@ function nextId() {
 
 export async function createOrder({ buyer, items }) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/orders`, {
+    const res = await fetch(`${BASE}/api/v1/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ buyer, items }),
@@ -53,7 +53,7 @@ export async function createOrder({ buyer, items }) {
 
 export async function getOrders(pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/orders`, {
+    const res = await fetch(`${BASE}/api/v1/admin/orders`, {
       headers: { 'X-Admin-Pin': pin },
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
@@ -69,7 +69,7 @@ export async function getOrders(pin) {
 
 export async function getBuyers(pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/buyers`, {
+    const res = await fetch(`${BASE}/api/v1/admin/buyers`, {
       headers: { 'X-Admin-Pin': pin },
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
@@ -80,7 +80,7 @@ export async function getBuyers(pin) {
 
 export async function createBuyer(buyer, pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/buyers`, {
+    const res = await fetch(`${BASE}/api/v1/admin/buyers`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
       body: JSON.stringify(buyer),
@@ -96,7 +96,7 @@ export async function createBuyer(buyer, pin) {
 
 export async function updateBuyer(id, buyer, pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/buyers/${id}`, {
+    const res = await fetch(`${BASE}/api/v1/admin/buyers/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
       body: JSON.stringify(buyer),
@@ -112,7 +112,7 @@ export async function updateBuyer(id, buyer, pin) {
 
 export async function deleteBuyer(id, pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/buyers/${id}`, {
+    const res = await fetch(`${BASE}/api/v1/admin/buyers/${id}`, {
       method: 'DELETE',
       headers: { 'X-Admin-Pin': pin },
     })
@@ -129,7 +129,7 @@ export async function deleteBuyer(id, pin) {
 
 export async function registerManualSale({ buyer, items, method, pin }) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/manual-sale`, {
+    const res = await fetch(`${BASE}/api/v1/admin/manual-sale`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -161,7 +161,7 @@ export async function registerManualSale({ buyer, items, method, pin }) {
 
 export async function checkInOrder(orderRef, pin) {
   if (BASE) {
-    const res = await fetch(`${BASE}/api/admin/orders/${orderRef}/check-in`, {
+    const res = await fetch(`${BASE}/api/v1/admin/orders/${orderRef}/check-in`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
