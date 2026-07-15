@@ -49,12 +49,34 @@ export async function createOrder({ buyer, items }) {
   return order
 }
 
+// ── ADMIN: AUTH ─────────────────────────────────────────────────
+
+export async function loginAdmin(pin) {
+  if (BASE) {
+    const res = await fetch(`${BASE}/api/v1/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin }),
+    })
+    if (!res.ok) throw new Error('PIN incorrecto o credenciales inválidas')
+    const data = await res.json()
+    return data.access_token
+  }
+  
+  // MOCK LOGIN
+  await fakeDelay(300)
+  if (pin !== import.meta.env.VITE_ADMIN_PIN && pin !== '1234') {
+    throw new Error('PIN incorrecto')
+  }
+  return 'mock_token'
+}
+
 // ── ADMIN: GET ORDERS ─────────────────────────────────────────
 
-export async function getOrders(pin) {
+export async function getOrders(token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/orders`, {
-      headers: { 'X-Admin-Pin': pin },
+      headers: { 'Authorization': `Bearer ${token}` },
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
     return res.json()
@@ -67,10 +89,10 @@ export async function getOrders(pin) {
 
 // ── ADMIN: BUYERS CRUD (CRM) ──────────────────────────────────
 
-export async function getBuyers(pin) {
+export async function getBuyers(token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/buyers`, {
-      headers: { 'X-Admin-Pin': pin },
+      headers: { 'Authorization': `Bearer ${token}` },
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
     return res.json()
@@ -78,11 +100,11 @@ export async function getBuyers(pin) {
   return [] // Mock no implementado para buyers
 }
 
-export async function createBuyer(buyer, pin) {
+export async function createBuyer(buyer, token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/buyers`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(buyer),
     })
     if (!res.ok) {
@@ -94,11 +116,11 @@ export async function createBuyer(buyer, pin) {
   return { id: Date.now(), ...buyer }
 }
 
-export async function updateBuyer(id, buyer, pin) {
+export async function updateBuyer(id, buyer, token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/buyers/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Pin': pin },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify(buyer),
     })
     if (!res.ok) {
@@ -110,11 +132,11 @@ export async function updateBuyer(id, buyer, pin) {
   return { id, ...buyer }
 }
 
-export async function deleteBuyer(id, pin) {
+export async function deleteBuyer(id, token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/buyers/${id}`, {
       method: 'DELETE',
-      headers: { 'X-Admin-Pin': pin },
+      headers: { 'Authorization': `Bearer ${token}` },
     })
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
@@ -127,13 +149,13 @@ export async function deleteBuyer(id, pin) {
 
 // ── ADMIN: REGISTER MANUAL SALE ───────────────────────────────
 
-export async function registerManualSale({ buyer, items, method, pin }) {
+export async function registerManualSale({ buyer, items, method, token }) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/manual-sale`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Admin-Pin': pin,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({ buyer, items, method }),
     })
@@ -159,14 +181,13 @@ export async function registerManualSale({ buyer, items, method, pin }) {
 
 // ── ADMIN: CHECK-IN ORDER (QR SCANNER) ────────────────────────
 
-export async function checkInOrder(orderRef, pin) {
+export async function checkInOrder(orderRef, token) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/orders/${orderRef}/check-in`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${pin}`, 
-        'X-Admin-Pin': pin,
+        'Authorization': `Bearer ${token}`, 
       },
     })
     
