@@ -19,8 +19,10 @@ export default function CheckoutModal({ onClose }) {
     instagram: sessionStorage.getItem('instagram_username') || '',
   })
 
-  const handleBuyerChange = (e) =>
-    setBuyer(b => ({ ...b, [e.target.name]: e.target.value }))
+  const handleBuyerChange = (e) => {
+    const val = e.target.name === 'phone' ? e.target.value.replace(/\D/g, '') : e.target.value;
+    setBuyer(b => ({ ...b, [e.target.name]: val }));
+  }
 
   const handlePhoneBlur = async () => {
     if (!buyer.phone) return

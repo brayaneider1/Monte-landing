@@ -301,7 +301,7 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                                             type="tel" 
                                             required 
                                             value={leadData.phone}
-                                            onChange={(e) => setLeadData({...leadData, phone: e.target.value})}
+                                            onChange={(e) => setLeadData({...leadData, phone: e.target.value.replace(/\D/g, '')})}
                                             placeholder="Ingresa tu número de teléfono"
                                             autoFocus
                                             style={{ textAlign: 'center', fontSize: '1.2rem', padding: '1rem' }}

@@ -28,6 +28,8 @@ export default function AdminPanel() {
   const [success, setSuccess] = useState('')
   const [formErr, setFormErr] = useState('')
   const [filterEvt, setFilterEvt] = useState('all')
+  const [orderSearch, setOrderSearch] = useState('')
+  const [buyerSearch, setBuyerSearch] = useState('')
 
   // Buyers CRUD State
   const emptyBuyerForm = { id: null, name: '', doc_type: 'CC', doc: '', email: '', phone: '', instagram: '' }
@@ -70,7 +72,8 @@ export default function AdminPanel() {
 
   // --- BUYER CRUD HANDLERS ---
   const handleBuyerForm = (e) => {
-    setBuyerForm({ ...buyerForm, [e.target.name]: e.target.value })
+    const val = e.target.name === 'phone' ? e.target.value.replace(/\D/g, '') : e.target.value
+    setBuyerForm({ ...buyerForm, [e.target.name]: val })
   }
   
   const saveBuyer = async (e) => {
@@ -116,7 +119,10 @@ export default function AdminPanel() {
 
   const handleForm = (e) => {
     const { name, value } = e.target
-    setForm(f => ({ ...f, [name]: name === 'qty' ? Math.max(1, +value) : value }))
+    let finalValue = value
+    if (name === 'qty') finalValue = Math.max(1, +value)
+    if (name === 'phone') finalValue = value.replace(/\D/g, '')
+    setForm(f => ({ ...f, [name]: finalValue }))
   }
 
   const handlePhoneBlur = async () => {
@@ -186,22 +192,61 @@ export default function AdminPanel() {
     }
   }
 
+  const handleDeleteOrder = async (orderId) => {
+    if (!window.confirm(`¿Estás seguro de eliminar la orden #${orderId}? Se borrarán también los tickets.`)) return
+    try {
+      const response = await fetch(`https://loop-core-production.up.railway.app/api/v1/admin/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      if (response.ok) {
+        alert('Orden eliminada correctamente')
+        loadOrders(token)
+      } else {
+        const data = await response.json()
+        alert(`Error al eliminar: ${data.detail || 'Desconocido'}`)
+      }
+    } catch (err) {
+      alert('Error de red al eliminar la orden')
+    }
+  }
+
   /* ── Filtered orders ── */
-  const filtered = filterEvt === 'all'
+  let filtered = filterEvt === 'all'
     ? orders
-    : orders.filter(o =>
-        o.items?.some(i => i.eventId === filterEvt)
-      )
+    : orders.filter(o => o.items?.some(i => String(i.eventId) === String(filterEvt)))
+
+  if (orderSearch) {
+    const s = orderSearch.toLowerCase()
+    filtered = filtered.filter(o => 
+      (o.order_ref && o.order_ref.toLowerCase().includes(s)) || 
+      (o.buyer?.name && o.buyer.name.toLowerCase().includes(s)) || 
+      (o.buyer?.doc && o.buyer.doc.includes(s)) ||
+      (o.buyer?.phone && o.buyer.phone.includes(s))
+    )
+  }
 
   /* ── Summary per event ── */
   const summary = eventsData.map(evt => {
-    const evtOrders = orders.filter(o => o.items?.some(i => i.eventId === evt.id))
-    const online  = evtOrders.filter(o => o.method === 'online').reduce((s, o) => s + (o.items?.find(i => i.eventId === evt.id)?.qty || 0), 0)
-    const manual  = evtOrders.filter(o => o.method !== 'online').reduce((s, o) => s + (o.items?.find(i => i.eventId === evt.id)?.qty || 0), 0)
+    const evtOrders = orders.filter(o => o.items?.some(i => String(i.eventId) === String(evt.id)))
+    const online  = evtOrders.filter(o => o.method === 'online').reduce((s, o) => s + (o.items?.find(i => String(i.eventId) === String(evt.id))?.qty || 0), 0)
+    const manual  = evtOrders.filter(o => o.method !== 'online').reduce((s, o) => s + (o.items?.find(i => String(i.eventId) === String(evt.id))?.qty || 0), 0)
     const total   = online + manual
-    const revenue = evtOrders.reduce((s, o) => s + (o.items?.find(i => i.eventId === evt.id)?.total || 0), 0)
+    const revenue = evtOrders.reduce((s, o) => s + Number(o.total_amount || 0), 0)
     return { ...evt, online, manual, total, revenue }
   })
+
+  /* ── Filtered buyers ── */
+  let filteredBuyers = buyers
+  if (buyerSearch) {
+    const s = buyerSearch.toLowerCase()
+    filteredBuyers = filteredBuyers.filter(b => 
+      (b.name && b.name.toLowerCase().includes(s)) || 
+      (b.email && b.email.toLowerCase().includes(s)) || 
+      (b.doc && b.doc.includes(s)) ||
+      (b.phone && b.phone.includes(s))
+    )
+  }
 
   /* ── RENDER: Login ── */
   if (!authed) {
@@ -407,16 +452,26 @@ export default function AdminPanel() {
                 Lista de compradores
                 <span className="admin-count">{filtered.length}</span>
               </h2>
-              <select
-                className="admin-filter-select"
-                value={filterEvt}
-                onChange={e => setFilterEvt(e.target.value)}
-              >
-                <option value="all">Todos los eventos</option>
-                {eventsData.map(ev => (
-                  <option key={ev.id} value={ev.id}>{ev.name}</option>
-                ))}
-              </select>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  className="admin-filter-select" 
+                  placeholder="Buscar orden (nombre, doc, ref)..." 
+                  value={orderSearch}
+                  onChange={e => setOrderSearch(e.target.value)}
+                  style={{ flex: 1 }}
+                />
+                <select
+                  className="admin-filter-select"
+                  value={filterEvt}
+                  onChange={e => setFilterEvt(e.target.value)}
+                >
+                  <option value="all">Todos los eventos</option>
+                  {eventsData.map(ev => (
+                    <option key={ev.id} value={ev.id}>{ev.name}</option>
+                  ))}
+                </select>
+              </div>
             </div>
 
             {filtered.length === 0
@@ -434,6 +489,7 @@ export default function AdminPanel() {
                         <th>MÉTODO</th>
                         <th>TOTAL</th>
                         <th>FECHA</th>
+                        <th>ACCIONES</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -441,7 +497,7 @@ export default function AdminPanel() {
                         const mainItem = o.items?.[0]
                         return (
                           <tr key={o.id}>
-                            <td data-label="ORDEN" className="order-id-cell">{o.id}</td>
+                            <td data-label="ORDEN" className="order-id-cell">{o.order_ref || o.id}</td>
                             <td data-label="NOMBRE">{o.buyer?.name || '—'}</td>
                             <td data-label="DOC">{o.buyer?.doc || '—'}</td>
                             <td data-label="EVENTO">{mainItem?.eventName || o.items?.map(i => i.eventName).join(', ') || '—'}</td>
@@ -452,13 +508,21 @@ export default function AdminPanel() {
                               </span>
                             </td>
                             <td data-label="TOTAL" className="total-cell">
-                              {formatCOP(o.items?.reduce((s, i) => s + (i.total || 0), 0))}
+                              {formatCOP(o.total_amount || 0)}
                             </td>
                             <td data-label="FECHA" className="date-cell">
-                              {new Date(o.createdAt).toLocaleString('es-CO', {
+                              {new Date(o.createdAt || Date.now()).toLocaleString('es-CO', {
                                 day: '2-digit', month: '2-digit',
                                 hour: '2-digit', minute: '2-digit',
                               })}
+                            </td>
+                            <td data-label="ACCIONES">
+                              <button 
+                                onClick={() => handleDeleteOrder(o.id)}
+                                style={{ background: '#ff3333', color: 'white', border: 'none', padding: '0.2rem 0.5rem', borderRadius: '4px', cursor: 'pointer', fontSize: '0.8rem' }}
+                              >
+                                Eliminar
+                              </button>
                             </td>
                           </tr>
                         )
@@ -529,14 +593,23 @@ export default function AdminPanel() {
             <div className="admin-list-header">
               <h2 className="admin-section-title" style={{ margin: 0 }}>
                 Directorio de Compradores
-                <span className="admin-count">{buyers.length}</span>
+                <span className="admin-count">{filteredBuyers.length}</span>
               </h2>
-              <button className="admin-btn-primary" onClick={() => openBuyerModal()} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
-                + NUEVO
-              </button>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                <input 
+                  type="text" 
+                  className="admin-filter-select" 
+                  placeholder="Buscar (nombre, email, doc)..." 
+                  value={buyerSearch}
+                  onChange={e => setBuyerSearch(e.target.value)}
+                />
+                <button className="admin-btn-primary" onClick={() => openBuyerModal()} style={{ width: 'auto', padding: '0.5rem 1rem' }}>
+                  + NUEVO
+                </button>
+              </div>
             </div>
 
-            {buyers.length === 0 ? (
+            {filteredBuyers.length === 0 ? (
               <p className="admin-empty">No hay compradores registrados.</p>
             ) : (
               <div className="admin-table-wrap">
@@ -552,7 +625,7 @@ export default function AdminPanel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {buyers.map(b => (
+                    {filteredBuyers.map(b => (
                       <tr key={b.id}>
                         <td data-label="ID" className="order-id-cell">{b.id}</td>
                         <td data-label="NOMBRE">{b.name || '—'}</td>
