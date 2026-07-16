@@ -9,7 +9,7 @@ const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 const TABS = ['VENTA EN MANO', 'ÓRDENES', 'RESUMEN', 'ESCANEAR', 'COMPRADORES (CRM)']
 
 const emptyForm = {
-  name: '', doc: '', email: '', phone: '',
+  name: '', doc: '', email: '', phone: '', instagram: '',
   eventId: eventsData[0]?.id || '',
   qty: 1,
   method: 'efectivo',
@@ -30,7 +30,7 @@ export default function AdminPanel() {
   const [filterEvt, setFilterEvt] = useState('all')
 
   // Buyers CRUD State
-  const emptyBuyerForm = { id: null, name: '', doc_type: 'CC', doc: '', email: '', phone: '' }
+  const emptyBuyerForm = { id: null, name: '', doc_type: 'CC', doc: '', email: '', phone: '', instagram: '' }
   const [buyerModalOpen, setBuyerModalOpen] = useState(false)
   const [buyerForm, setBuyerForm] = useState(emptyBuyerForm)
   const [buyerErr, setBuyerErr] = useState('')
@@ -119,30 +119,62 @@ export default function AdminPanel() {
     setForm(f => ({ ...f, [name]: name === 'qty' ? Math.max(1, +value) : value }))
   }
 
+  const handlePhoneBlur = async () => {
+    if (!form.phone) return
+    try {
+      const response = await fetch('https://loop-core-production.up.railway.app/api/v1/leads/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone })
+      })
+      if (response.ok) {
+        const data = await response.json()
+        if (data.buyer) {
+          setForm(f => ({
+            ...f,
+            name: f.name || data.buyer.name || '',
+            email: f.email || data.buyer.email || '',
+            doc: f.doc || data.buyer.doc || '',
+            instagram: f.instagram || data.buyer.instagram || '',
+          }))
+        }
+      }
+    } catch (err) {
+      console.error("Error looking up buyer by phone in admin panel:", err)
+    }
+  }
+
   const handleRegister = async (e) => {
     e.preventDefault()
     setFormErr('')
     setSuccess('')
-    if (!form.name || !form.doc) {
-      setFormErr('Nombre y documento son obligatorios.')
+    if (!form.name || !form.doc || !form.phone) {
+      setFormErr('Nombre, documento y teléfono son obligatorios.')
       return
     }
     setLoading(true)
     try {
       const event = eventsData.find(ev => ev.id === form.eventId)
+      const eventSlug = event?.slug || 'selvatica-2026'
+      const ticketType = eventSlug === 'selvatica-2026' ? 'preventa' : 'general'
+
       const order = await registerManualSale({
-        buyer: { name: form.name, doc: form.doc, email: form.email, phone: form.phone },
+        event_slug: eventSlug,
+        buyer: { 
+          name: form.name, 
+          doc: form.doc, 
+          email: form.email || null, 
+          phone: form.phone,
+          instagram: form.instagram ? form.instagram.trim() : null
+        },
         items: [{
-          eventId: form.eventId,
-          eventName: event?.name || form.eventId,
-          qty: form.qty,
-          priceUnit: event?.price || 0,
-          total: form.qty * (event?.price || 0),
+          ticket_type: ticketType,
+          quantity: form.qty
         }],
-        method: form.method,
+        payment_method: form.method,
         token: token,
       })
-      setSuccess(`✓ Venta registrada — Orden ${order.id}`)
+      setSuccess(`✓ Venta registrada — Orden ${order.order_ref || order.id}`)
       setForm(emptyForm)
       if (tab === 1 || tab === 2) loadOrders(token)
       if (tab === 4) loadBuyers(token)
@@ -277,6 +309,19 @@ export default function AdminPanel() {
                 </div>
 
                 <div className="af-field">
+                  <label htmlFor="af-phone">Teléfono / WhatsApp *</label>
+                  <input
+                    id="af-phone"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleForm}
+                    onBlur={handlePhoneBlur}
+                    placeholder="Ej. 3124524674"
+                    required
+                  />
+                </div>
+
+                <div className="af-field">
                   <label htmlFor="af-name">Nombre completo *</label>
                   <input
                     id="af-name"
@@ -307,6 +352,17 @@ export default function AdminPanel() {
                     value={form.email}
                     onChange={handleForm}
                     placeholder="correo@ejemplo.com"
+                  />
+                </div>
+
+                <div className="af-field">
+                  <label htmlFor="af-instagram">Usuario de Instagram <span className="optional">(opcional)</span></label>
+                  <input
+                    id="af-instagram"
+                    name="instagram"
+                    value={form.instagram}
+                    onChange={handleForm}
+                    placeholder="Ej. @brayan_rave"
                   />
                 </div>
 

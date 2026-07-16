@@ -11,7 +11,8 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
         docType: 'CC', // Not used anymore
         doc: '', // Not used anymore
         discountCode: '', 
-        phone: '' 
+        phone: '',
+        instagram: sessionStorage.getItem('instagram_username') || ''
     });
     const [attendees, setAttendees] = useState([]);
     const [showTooltip, setShowTooltip] = useState(false);
@@ -37,20 +38,42 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
     const handleNextStep = async (e) => {
         e.preventDefault();
         if (leadData.phone) {
-            // Call leads endpoint in background
-            fetch('https://loop-core-production.up.railway.app/api/v1/leads/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    phone: leadData.phone,
-                    discount_code: leadData.discountCode ? leadData.discountCode : null
-                })
-            }).catch(err => console.error("Error saving lead:", err));
+            try {
+                // Call leads endpoint in background and check if buyer exists
+                const response = await fetch('https://loop-core-production.up.railway.app/api/v1/leads/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        phone: leadData.phone,
+                        discount_code: leadData.discountCode ? leadData.discountCode : null
+                    })
+                });
+                
+                let existingBuyer = null;
+                if (response.ok) {
+                    const resData = await response.json();
+                    if (resData.buyer) {
+                        existingBuyer = resData.buyer;
+                        if (existingBuyer.instagram) {
+                            setLeadData(prev => ({ ...prev, instagram: existingBuyer.instagram }));
+                        }
+                    }
+                }
 
-            // Initialize attendees array
-            setAttendees(Array.from({ length: totalPersons }, () => ({
-                name: '', email: '', phone: '', ticket_type: ticketName
-            })));
+                // Initialize attendees array, auto-filling the first attendee (buyer) if data exists
+                setAttendees(Array.from({ length: totalPersons }, (_, index) => ({
+                    name: (index === 0 && existingBuyer?.name) ? existingBuyer.name : '',
+                    email: (index === 0 && existingBuyer?.email) ? existingBuyer.email : '',
+                    phone: index === 0 ? leadData.phone : '',
+                    ticket_type: ticketName
+                })));
+            } catch (err) {
+                console.error("Error saving lead / fetching buyer:", err);
+                // Fallback
+                setAttendees(Array.from({ length: totalPersons }, () => ({
+                    name: '', email: '', phone: '', ticket_type: ticketName
+                })));
+            }
             setStep(2);
         }
     };
@@ -96,11 +119,12 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
             const ticketType = selectedOption ? selectedOption.id : 'general';
             
             const payload = {
-                event_slug: "selvatica-2026",
+                event_slug: event?.slug || "selvatica-2026",
                 buyer: {
                     phone: leadData.phone,
                     name: attendees[0].name.trim(),
-                    email: attendees[0].email.trim()
+                    email: attendees[0].email.trim(),
+                    instagram: leadData.instagram ? leadData.instagram.trim() : null
                 },
                 items: [
                     {
@@ -197,11 +221,12 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
         try {
             const ticketType = selectedOption ? selectedOption.id : 'general';
             const payload = {
-                event_slug: "selvatica-2026",
+                event_slug: event?.slug || "selvatica-2026",
                 buyer: {
                     phone: leadData.phone,
                     name: attendees[0].name.trim(),
-                    email: attendees[0].email.trim()
+                    email: attendees[0].email.trim(),
+                    instagram: leadData.instagram ? leadData.instagram.trim() : null
                 },
                 items: [{ ticket_type: ticketType, quantity: ticketQty }],
                 attendees: attendees.map(a => ({
@@ -362,6 +387,18 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
                                                     APLICAR
                                                 </button>
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="checkout-form-grid" style={{ marginTop: '1rem' }}>
+                                        <div className="form-group full-width">
+                                            <label>USUARIO DE INSTAGRAM (OPCIONAL)</label>
+                                            <input 
+                                                type="text" 
+                                                value={leadData.instagram}
+                                                onChange={(e) => setLeadData({...leadData, instagram: e.target.value})}
+                                                placeholder="Ej. @brayan_rave"
+                                            />
                                         </div>
                                     </div>
                                 </form>

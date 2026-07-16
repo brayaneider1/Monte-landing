@@ -22,12 +22,12 @@ function nextId() {
 
 // ── PUBLIC: CREATE ORDER (checkout) ──────────────────────────
 
-export async function createOrder({ buyer, items }) {
+export async function createOrder(payload) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/orders`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ buyer, items }),
+      body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
     return res.json()
@@ -37,9 +37,9 @@ export async function createOrder({ buyer, items }) {
   await fakeDelay(600)
   const order = {
     id: nextId(),
-    buyer,
-    items,
-    method: 'online',
+    buyer: payload.buyer,
+    items: payload.items,
+    method: payload.payment_method || 'online',
     status: 'pending_payment',
     createdAt: new Date().toISOString(),
   }
@@ -149,7 +149,7 @@ export async function deleteBuyer(id, token) {
 
 // ── ADMIN: REGISTER MANUAL SALE ───────────────────────────────
 
-export async function registerManualSale({ buyer, items, method, token }) {
+export async function registerManualSale({ token, ...payload }) {
   if (BASE) {
     const res = await fetch(`${BASE}/api/v1/admin/manual-sale`, {
       method: 'POST',
@@ -157,7 +157,7 @@ export async function registerManualSale({ buyer, items, method, token }) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ buyer, items, method }),
+      body: JSON.stringify(payload),
     })
     if (!res.ok) throw new Error(`API error ${res.status}`)
     return res.json()
@@ -167,9 +167,9 @@ export async function registerManualSale({ buyer, items, method, token }) {
   await fakeDelay(400)
   const order = {
     id: nextId(),
-    buyer,
-    items,
-    method,
+    buyer: payload.buyer,
+    items: payload.items,
+    method: payload.payment_method,
     status: 'confirmed',
     createdAt: new Date().toISOString(),
   }

@@ -36,6 +36,13 @@ function LoopHome() {
     }, [activeEvent])
 
     useEffect(() => {
+        // Capturar usuario de Instagram o referido de la URL
+        const params = new URLSearchParams(window.location.search)
+        const ig = params.get('ig') || params.get('ref')
+        if (ig) {
+            sessionStorage.setItem('instagram_username', ig)
+        }
+
         const now = new Date()
         const upcoming = eventsData
             .map(e => ({ ...e, dateObj: new Date(e.date) }))

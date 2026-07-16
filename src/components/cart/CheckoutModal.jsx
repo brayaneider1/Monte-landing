@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useCart } from '../../context/CartContext'
 import { createOrder, formatCOP } from '../../services/api'
+import eventsData from '../../data/events.json'
 import './CheckoutModal.css'
 
 const STEPS = ['RESUMEN', 'TUS DATOS', 'PAGO']
@@ -15,10 +16,36 @@ export default function CheckoutModal({ onClose }) {
 
   const [buyer, setBuyer] = useState({
     name: '', doc: '', email: '', phone: '',
+    instagram: sessionStorage.getItem('instagram_username') || '',
   })
 
   const handleBuyerChange = (e) =>
     setBuyer(b => ({ ...b, [e.target.name]: e.target.value }))
+
+  const handlePhoneBlur = async () => {
+    if (!buyer.phone) return
+    try {
+      const response = await fetch('https://loop-core-production.up.railway.app/api/v1/leads/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: buyer.phone })
+      })
+      if (response.ok) {
+        const data = await response.json()
+        if (data.buyer) {
+          setBuyer(b => ({
+            ...b,
+            name: b.name || data.buyer.name || '',
+            email: b.email || data.buyer.email || '',
+            doc: b.doc || data.buyer.doc || '',
+            instagram: b.instagram || data.buyer.instagram || '',
+          }))
+        }
+      }
+    } catch (err) {
+      console.error("Error looking up buyer by phone in cart:", err)
+    }
+  }
 
   // ── Step 0 → 1
   const goToData = () => {
@@ -29,8 +56,8 @@ export default function CheckoutModal({ onClose }) {
   // ── Step 1 → 2
   const goToPayment = (e) => {
     e.preventDefault()
-    if (!buyer.name || !buyer.doc || !buyer.email) {
-      setError('Nombre, documento y correo son obligatorios.')
+    if (!buyer.name || !buyer.doc || !buyer.email || !buyer.phone) {
+      setError('Nombre, documento, correo y teléfono son obligatorios.')
       return
     }
     setError('')
@@ -42,15 +69,24 @@ export default function CheckoutModal({ onClose }) {
     setLoading(true)
     setError('')
     try {
+      const firstItem = items[0]
+      const event = eventsData.find(e => e.id === firstItem?.eventId)
+      const eventSlug = event?.slug || 'selvatica-2026'
+
       const created = await createOrder({
-        buyer,
+        event_slug: eventSlug,
+        buyer: {
+          name: buyer.name,
+          doc: buyer.doc,
+          email: buyer.email,
+          phone: buyer.phone,
+          instagram: buyer.instagram ? buyer.instagram.trim() : null
+        },
         items: items.map(i => ({
-          eventId: i.eventId,
-          eventName: i.eventName,
-          qty: i.qty,
-          priceUnit: i.priceUnit,
-          total: i.qty * i.priceUnit,
+          ticket_type: i.optionId === 'default' ? 'general' : i.optionId,
+          quantity: i.qty
         })),
+        payment_method: "wompi"
       })
       setOrder(created)
       clearCart()
@@ -180,15 +216,28 @@ export default function CheckoutModal({ onClose }) {
                       required
                     />
                   </div>
-                  <div className="co-field">
-                    <label htmlFor="co-phone">Teléfono <span className="optional">(opcional)</span></label>
+                   <div className="co-field">
+                    <label htmlFor="co-phone">Teléfono *</label>
                     <input
                       id="co-phone"
                       name="phone"
                       type="tel"
                       value={buyer.phone}
                       onChange={handleBuyerChange}
+                      onBlur={handlePhoneBlur}
                       placeholder="+57 300 000 0000"
+                      required
+                    />
+                  </div>
+                  <div className="co-field">
+                    <label htmlFor="co-instagram">Usuario de Instagram <span className="optional">(opcional)</span></label>
+                    <input
+                      id="co-instagram"
+                      name="instagram"
+                      type="text"
+                      value={buyer.instagram}
+                      onChange={handleBuyerChange}
+                      placeholder="Ej. @brayan_rave"
                     />
                   </div>
                   {error && <p className="co-error">{error}</p>}
