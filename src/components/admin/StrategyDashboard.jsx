@@ -1,251 +1,251 @@
-import React, { useState } from 'react';
-import { selvaticaData } from '../../data/selvatica';
+import React, { useState } from 'react'
+import { useStrategyStore } from '../../hooks/useStrategyStore'
+import { useMarketingCrew } from '../../hooks/useMarketingCrew'
+import { useSponsorPipeline } from '../../hooks/useSponsorPipeline'
+import WarRoom from './strategy/WarRoom'
+import ContentPlan from './strategy/ContentPlan'
+import CrewManager from './strategy/CrewManager'
+import SponsorPipeline from './strategy/SponsorPipeline'
 
-const data = selvaticaData.marketingStrategy;
+const GREEN = '#00FF88'
+const BRAYAN = '#38BDF8'
+const MARIA  = '#F472B6'
+
+const NAV = [
+  { id: 'warroom',  label: '🎯 War Room'    },
+  { id: 'plan',     label: '📅 Contenidos'  },
+  { id: 'crew',     label: '🎤 Red'         },
+  { id: 'sponsors', label: '🤝 Sponsors'    },
+  { id: 'finanzas', label: '💰 Finanzas'    },
+]
+
+const formatCOP = (v) => {
+  if (!v && v !== 0) return '—'
+  if (typeof v === 'string' && v.includes('$')) return v
+  return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(v)
+}
 
 export default function StrategyDashboard() {
-  const [subTab, setSubTab] = useState('kpi');
+  const [subTab, setSubTab] = useState('warroom')
 
-  const formatCOP = (val) => {
-    if (typeof val === 'string' && val.includes('$')) return val;
-    return new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(val || 0);
-  };
+  const {
+    strategy,
+    updateField, updateKpi, updateTask, updateTaskMetrics,
+    addTask, deleteTask, addListItem, updateListItem, deleteListItem,
+    getPhaseStats, getTotalEmv, resetToDefaults
+  } = useStrategyStore()
+
+  const {
+    crew, addPerson, updatePerson, deletePerson,
+    addPost, updatePost, deletePost, getCrewStats
+  } = useMarketingCrew()
+
+  const {
+    pipeline, addSponsor, updateSponsor, deleteSponsor,
+    advanceStage, getPipelineStats
+  } = useSponsorPipeline()
+
+  const phaseStats   = getPhaseStats()
+  const crewStats    = getCrewStats()
+  const sponsorStats = getPipelineStats()
 
   return (
-    <div style={{ animation: 'fadeIn 0.3s ease' }}>
-      {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', padding: '1.5rem', background: 'var(--bg-glass)', borderRadius: '16px', border: '1px solid var(--border-glass)', backdropFilter: 'blur(10px)' }}>
-        <img src="/selvatica_monochrome.png" alt="Selvatica" style={{ width: '100px', height: '100px', objectFit: 'contain', filter: 'drop-shadow(0 0 10px rgba(0,255,136,0.3))' }} />
-        <div>
-          <h2 className="admin-section-title" style={{ margin: 0, fontSize: '1.5rem' }}>{data.title}</h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '4px', textTransform: 'uppercase', letterSpacing: '1px' }}>{data.subtitle}</p>
-          <div style={{ display: 'inline-block', background: 'rgba(0,255,136,0.1)', color: 'var(--neon-green)', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', marginTop: '12px', fontWeight: 'bold', border: '1px solid rgba(0,255,136,0.3)' }}>
-            TIMELINE: {data.timeline}
-          </div>
-        </div>
-      </div>
-
-      {/* Sub Tabs */}
-      <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', overflowX: 'auto', paddingBottom: '10px' }}>
-        {[
-          { id: 'kpi', label: 'METAS & COMPETENCIA' },
-          { id: 'fases', label: 'FASES (KANBAN)' },
-          { id: 'alianzas', label: 'ALIANZAS & IA' },
-          { id: 'presupuesto', label: 'FINANZAS & BARRA' }
-        ].map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setSubTab(tab.id)}
-            style={{
-              background: subTab === tab.id ? 'var(--neon-green)' : 'var(--bg-glass)',
-              color: subTab === tab.id ? 'var(--bg-dark)' : 'var(--text-main)',
-              border: `1px solid ${subTab === tab.id ? 'var(--neon-green)' : 'var(--border-glass)'}`,
-              padding: '8px 16px',
-              borderRadius: '8px',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'all 0.2s'
-            }}
-          >
+    <div style={{ paddingBottom: '40px' }}>
+      {/* ── Top Nav ── */}
+      <div style={{ display: 'flex', gap: '6px', marginBottom: '18px', overflowX: 'auto', paddingBottom: '4px' }}>
+        {NAV.map(tab => (
+          <button key={tab.id} onClick={() => setSubTab(tab.id)} style={{
+            background: subTab === tab.id ? GREEN : 'rgba(255,255,255,0.05)',
+            color: subTab === tab.id ? 'black' : '#9CA3AF',
+            border: `1px solid ${subTab === tab.id ? GREEN : 'rgba(255,255,255,0.1)'}`,
+            padding: '8px 14px', borderRadius: '8px', fontWeight: 'bold',
+            cursor: 'pointer', whiteSpace: 'nowrap', fontSize: '12px', transition: 'all 0.2s'
+          }}>
             {tab.label}
           </button>
         ))}
+        <button onClick={() => { if (confirm('¿Restaurar datos originales? Se perderán los cambios.')) resetToDefaults() }}
+          style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)', color: '#EF4444', padding: '8px 12px', borderRadius: '8px', cursor: 'pointer', fontSize: '11px', marginLeft: 'auto' }}>
+          ↺ Reset
+        </button>
       </div>
 
-      {/* ─── TAB: METAS ─── */}
-      {subTab === 'kpi' && (
-        <div style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}>
-          
-          <div className="admin-section" style={{ margin: 0 }}>
-            <h3 style={{ color: 'var(--neon-green)', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', marginBottom: '15px' }}>OBJETIVOS (KPIs)</h3>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px' }}>
-                <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Creyentes Vendidas</div>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--neon-green)' }}>{data.kpi.creyentes_vendidas}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>a {formatCOP(data.kpi.creyentes_precio)}</div>
-              </div>
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px' }}>
-                <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Preventa 1</div>
-                <div style={{ fontSize: '24px', fontWeight: 'bold', color: 'var(--neon-green)' }}>{data.kpi.preventa1_vendidas}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>a {formatCOP(data.kpi.preventa1_precio)}</div>
-              </div>
-              <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', gridColumn: '1 / -1' }}>
-                <div style={{ fontSize: '10px', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Meta Global Boletas</div>
-                <div style={{ fontSize: '32px', fontWeight: 'bold' }}>{data.kpi.boletas_vendidas} <span style={{ color: 'var(--text-muted)', fontSize: '20px' }}>/ {data.kpi.meta_boletas}</span></div>
-                <div style={{ width: '100%', height: '8px', background: 'rgba(255,255,255,0.1)', borderRadius: '4px', marginTop: '10px', overflow: 'hidden' }}>
-                  <div style={{ width: `${(data.kpi.boletas_vendidas / data.kpi.meta_boletas) * 100}%`, height: '100%', background: 'var(--neon-green)' }}></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="admin-section" style={{ margin: 0, borderColor: 'rgba(239, 68, 68, 0.3)', background: 'rgba(239, 68, 68, 0.02)' }}>
-            <h3 style={{ color: '#EF4444', borderBottom: '1px solid rgba(239, 68, 68, 0.2)', paddingBottom: '10px', marginBottom: '15px' }}>ANÁLISIS DE COMPETENCIA</h3>
-            <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
-              <div style={{ fontWeight: 'bold', color: '#EF4444', marginBottom: '5px' }}>Rival</div>
-              <div style={{ fontSize: '14px' }}>{data.competencia.rival}</div>
-            </div>
-            <div style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px' }}>
-              <div style={{ fontWeight: 'bold', color: 'var(--gold)', marginBottom: '5px' }}>Diagnóstico Estratégico</div>
-              <div style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.5' }}>{data.competencia.diagnostico}</div>
-            </div>
-          </div>
-
-        </div>
+      {/* ── War Room ── */}
+      {subTab === 'warroom' && (
+        <WarRoom
+          phaseStats={phaseStats}
+          crewStats={crewStats}
+          sponsorStats={sponsorStats}
+          strategy={strategy}
+        />
       )}
 
-      {/* ─── TAB: FASES ─── */}
-      {subTab === 'fases' && (
-        <div style={{ display: 'grid', gap: '20px' }}>
-          {data.fases.map((fase) => (
-            <div key={fase.id} className="admin-section" style={{ margin: 0 }}>
-              <div style={{ borderLeft: '4px solid var(--neon-green)', paddingLeft: '15px', marginBottom: '20px' }}>
-                <h3 style={{ margin: 0, color: 'var(--text-main)' }}>{fase.nombre}</h3>
-                <p style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '5px' }}>{fase.objetivo}</p>
-              </div>
-              
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '15px' }}>
-                {fase.acciones.map((acc, idx) => (
-                  <div key={idx} style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-glass)', padding: '15px', borderRadius: '8px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '10px' }}>
-                      <span style={{ background: 'var(--neon-green)', color: 'black', padding: '2px 6px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold' }}>{acc.fecha}</span>
-                      <span style={{ fontSize: '10px', color: 'var(--text-muted)', border: '1px solid rgba(255,255,255,0.2)', padding: '2px 6px', borderRadius: '4px' }}>{acc.canal}</span>
-                    </div>
-                    <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--text-main)' }}>{acc.pieza}</h4>
-                    <p style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4', marginBottom: '10px' }}>{acc.detalles}</p>
-                    
-                    {acc.requerimientos && acc.requerimientos.length > 0 && (
-                      <div style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '6px' }}>
-                        <div style={{ fontSize: '10px', color: 'var(--neon-green)', marginBottom: '5px', textTransform: 'uppercase' }}>Requerimientos</div>
-                        <ul style={{ margin: 0, paddingLeft: '15px', fontSize: '11px', color: 'var(--text-muted)' }}>
-                          {acc.requerimientos.map((req, ridx) => <li key={ridx} style={{ marginBottom: '3px' }}>{req}</li>)}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* ── Plan de Contenidos ── */}
+      {subTab === 'plan' && (
+        <ContentPlan
+          strategy={strategy}
+          updateTask={updateTask}
+          updateTaskMetrics={updateTaskMetrics}
+          addTask={addTask}
+          deleteTask={deleteTask}
+        />
       )}
 
-      {/* ─── TAB: ALIANZAS & IA ─── */}
-      {subTab === 'alianzas' && (
-        <div style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
-          
-          <div className="admin-section" style={{ margin: 0 }}>
-            <h3 style={{ color: 'var(--gold)', borderBottom: '1px solid rgba(245, 158, 11, 0.3)', paddingBottom: '10px', marginBottom: '15px' }}>RUTA DE CAPTACIÓN (ALIANZAS)</h3>
-            {data.patrocinadores_estrategia?.ruta_captacion?.map((ruta, idx) => (
-              <div key={idx} style={{ background: 'rgba(245, 158, 11, 0.05)', border: '1px solid rgba(245, 158, 11, 0.2)', padding: '15px', borderRadius: '8px', marginBottom: '15px' }}>
-                <div style={{ fontSize: '11px', color: 'var(--gold)', fontWeight: 'bold', marginBottom: '5px' }}>{ruta.nivel}</div>
-                <div style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '8px' }}>{ruta.target}</div>
-                <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '8px' }}><strong>Oferta pedida:</strong> {ruta.oferta_pedida}</div>
-                <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px', lineHeight: '1.4' }}>{ruta.justificacion}</div>
-                <div style={{ fontSize: '12px', color: 'var(--neon-green)', background: 'rgba(0,255,136,0.1)', padding: '8px', borderRadius: '4px' }}>{ruta.gancho_monte}</div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            <div className="admin-section" style={{ margin: 0 }}>
-              <h3 style={{ color: 'var(--neon-green)', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', marginBottom: '15px' }}>IA ENGINEERING</h3>
-              {data.ia_engineering?.map((ia, idx) => (
-                <div key={idx} style={{ marginBottom: '15px', background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '8px' }}>
-                  <div style={{ fontWeight: 'bold', color: 'white', marginBottom: '5px' }}>{ia.titulo}</div>
-                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: '1.4' }}>{ia.detalles}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="admin-section" style={{ margin: 0, borderColor: 'rgba(59, 130, 246, 0.3)' }}>
-              <h3 style={{ color: '#3B82F6', borderBottom: '1px solid rgba(59, 130, 246, 0.2)', paddingBottom: '10px', marginBottom: '15px' }}>HOOKS TIKTOK</h3>
-              <ul style={{ margin: 0, paddingLeft: '15px', fontSize: '13px', color: 'var(--text-muted)' }}>
-                {data.contexto_marketing?.tiktok_hooks?.map((h, i) => (
-                  <li key={i} style={{ marginBottom: '10px', lineHeight: '1.4' }}>"{h}"</li>
-                ))}
-              </ul>
-              <div style={{ marginTop: '15px', fontSize: '11px', color: '#3B82F6', background: 'rgba(59, 130, 246, 0.1)', padding: '8px', borderRadius: '4px' }}>
-                {data.contexto_marketing?.tiktok_horarios}
-              </div>
-            </div>
-          </div>
-
-        </div>
+      {/* ── Red de Activación ── */}
+      {subTab === 'crew' && (
+        <CrewManager
+          crew={crew}
+          addPerson={addPerson}
+          updatePerson={updatePerson}
+          deletePerson={deletePerson}
+          addPost={addPost}
+          updatePost={updatePost}
+          deletePost={deletePost}
+        />
       )}
 
-      {/* ─── TAB: FINANZAS & BARRA ─── */}
-      {subTab === 'presupuesto' && (
-        <div style={{ display: 'grid', gap: '20px' }}>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-            <div className="admin-section" style={{ margin: 0 }}>
-              <h3 style={{ color: 'var(--neon-green)', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', marginBottom: '15px' }}>NUEVOS INGRESOS (UPSELLS)</h3>
-              {data.nuevosIngresos?.map((ing, idx) => (
-                <div key={idx} style={{ background: 'rgba(255,255,255,0.05)', padding: '15px', borderRadius: '8px', marginBottom: '10px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                    <strong style={{ color: 'var(--text-main)' }}>{ing.titulo}</strong>
-                    <span style={{ color: 'var(--neon-green)', fontWeight: 'bold' }}>{ing.ingreso_estimado}</span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{ing.detalles}</div>
-                </div>
-              ))}
-            </div>
-
-            <div className="admin-section" style={{ margin: 0 }}>
-              <h3 style={{ color: 'var(--gold)', borderBottom: '1px solid rgba(245, 158, 11, 0.2)', paddingBottom: '10px', marginBottom: '15px' }}>ESTRATEGIAS TAQUILLA & BARRA</h3>
-              <div style={{ fontSize: '12px', color: 'var(--gold)', marginBottom: '10px', fontWeight: 'bold' }}>TAQUILLA</div>
-              {data.estrategias_pro_taquilla?.map((est, idx) => (
-                <div key={'t'+idx} style={{ marginBottom: '10px', fontSize: '12px' }}>
-                  <strong style={{ color: 'white' }}>{est.titulo}:</strong> <span style={{ color: 'var(--text-muted)' }}>{est.detalles}</span>
-                </div>
-              ))}
-              <div style={{ fontSize: '12px', color: 'var(--gold)', margin: '15px 0 10px 0', fontWeight: 'bold' }}>BARRA</div>
-              {data.estrategias_pro_barra?.map((est, idx) => (
-                <div key={'b'+idx} style={{ marginBottom: '10px', fontSize: '12px' }}>
-                  <strong style={{ color: 'white' }}>{est.titulo}:</strong> <span style={{ color: 'var(--text-muted)' }}>{est.detalles}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="admin-section" style={{ margin: 0 }}>
-            <h3 style={{ color: 'var(--neon-green)', borderBottom: '1px solid var(--border-glass)', paddingBottom: '10px', marginBottom: '15px' }}>RESUMEN FINANCIERO TOTAL</h3>
-            <div className="admin-table-wrap">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>CONCEPTO</th>
-                    <th style={{ textAlign: 'right' }}>VALOR</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Ingresos Esperados (Taquilla 100 + Barra + Patrocinios + Upsells)</td>
-                    <td style={{ textAlign: 'right', color: 'var(--neon-green)', fontWeight: 'bold' }}>{data.resumen_total?.ingresos_esperados}</td>
-                  </tr>
-                  <tr>
-                    <td>Costos Estimados Operación</td>
-                    <td style={{ textAlign: 'right', color: '#EF4444' }}>{data.resumen_total?.costos_estimados}</td>
-                  </tr>
-                  <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
-                    <td style={{ fontWeight: 'bold' }}>UTILIDAD BRUTA ESTIMADA</td>
-                    <td style={{ textAlign: 'right', color: 'var(--neon-green)', fontWeight: 'bold', fontSize: '18px' }}>{data.resumen_total?.utilidad_bruta_estimada}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {data.resumen_total?.punto_equilibrio && (
-              <div style={{ marginTop: '15px', background: 'rgba(0,255,136,0.1)', borderLeft: '4px solid var(--neon-green)', padding: '10px 15px', borderRadius: '0 8px 8px 0', fontSize: '13px' }}>
-                <strong>Punto de Equilibrio (Break-Even):</strong> {data.resumen_total.punto_equilibrio}
-              </div>
-            )}
-          </div>
-
-        </div>
+      {/* ── Pipeline de Sponsors ── */}
+      {subTab === 'sponsors' && (
+        <SponsorPipeline
+          pipeline={pipeline}
+          addSponsor={addSponsor}
+          updateSponsor={updateSponsor}
+          deleteSponsor={deleteSponsor}
+          advanceStage={advanceStage}
+          getPipelineStats={getPipelineStats}
+        />
       )}
 
+      {/* ── Finanzas & Barra ── */}
+      {subTab === 'finanzas' && (
+        <FinanzasPanel strategy={strategy} formatCOP={formatCOP} />
+      )}
     </div>
-  );
+  )
 }
+
+// ─── Finanzas Panel (static read + editable KPIs) ───────────────────────────
+function FinanzasPanel({ strategy, formatCOP }) {
+  const data = strategy
+
+  return (
+    <div style={{ display: 'grid', gap: '20px' }}>
+      {/* Resumen Total */}
+      {data.resumen_total?.escenarios && (
+        <Section title="GRAN RESUMEN CONSOLIDADO">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(0,0,0,0.3)', borderRadius: '10px', overflow: 'hidden' }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <Th>Escenario</Th><Th>Evento</Th><Th>After</Th><Th>Total</Th><Th>Estado</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.resumen_total.escenarios.map((esc, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Td>{esc.nombre}</Td>
+                    <Td style={{ color: esc.ganancia_evento?.includes('-') ? '#EF4444' : '#00FF88' }}>{esc.ganancia_evento}</Td>
+                    <Td style={{ color: '#00FF88' }}>{esc.ganancia_after}</Td>
+                    <Td style={{ fontWeight: 'bold', color: esc.gran_total?.includes('-') ? '#EF4444' : '#00FF88', fontSize: '15px' }}>{esc.gran_total}</Td>
+                    <Td><span style={{ fontSize: '10px', background: 'rgba(255,255,255,0.08)', padding: '2px 6px', borderRadius: '4px' }}>{esc.estado}</span></Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+      )}
+
+      {/* Inventario Barra Main */}
+      {data.inventario_barra_main && (
+        <Section title="INVENTARIO BARRA MAIN">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(0,0,0,0.3)', borderRadius: '10px', overflow: 'hidden', minWidth: '500px' }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <Th>Producto</Th><Th>Costo</Th><Th>Venta</Th><Th>Margen</Th><Th>Unds (120 pax)</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.inventario_barra_main.map((item, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Td style={{ fontWeight: 'bold' }}>{item.prod}</Td>
+                    <Td style={{ color: '#EF4444' }}>{formatCOP(item.costo_und)}</Td>
+                    <Td style={{ color: '#00FF88', fontWeight: 'bold' }}>{formatCOP(item.venta_und)}</Td>
+                    <Td style={{ color: '#F59E0B' }}>{item.margen}</Td>
+                    <Td>{item.unidades?.p120 || '—'} <span style={{ fontSize: '10px', color: '#9CA3AF' }}>({item.pacas?.p120} pacas)</span></Td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Section>
+      )}
+
+      {/* Proyecciones */}
+      {data.proyecciones_rentabilidad_main?.escenarios && (
+        <Section title="PROYECCIONES DE RENTABILIDAD">
+          <p style={{ fontSize: '12px', color: '#9CA3AF', marginBottom: '14px' }}>{data.proyecciones_rentabilidad_main.base_datos}</p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
+            {data.proyecciones_rentabilidad_main.escenarios.map((esc, i) => {
+              const neg = esc.neto_final?.includes('-')
+              return (
+                <div key={i} style={{ background: neg ? 'rgba(239,68,68,0.06)' : 'rgba(0,255,136,0.06)', border: `1px solid ${neg ? 'rgba(239,68,68,0.25)' : 'rgba(0,255,136,0.2)'}`, borderRadius: '10px', padding: '14px' }}>
+                  <div style={{ fontWeight: 'bold', fontSize: '18px', color: '#fff', marginBottom: '8px' }}>{esc.pax} PAX</div>
+                  <div style={{ fontSize: '11px', color: '#9CA3AF' }}>Taquilla: {esc.ingreso_taquilla}</div>
+                  <div style={{ fontSize: '11px', color: '#9CA3AF' }}>Barra: {esc.ingreso_barra}</div>
+                  <div style={{ marginTop: '10px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                    <span style={{ fontSize: '10px', color: '#9CA3AF' }}>NETO</span>
+                    <span style={{ fontSize: '18px', fontWeight: 'bold', color: neg ? '#EF4444' : '#00FF88' }}>{esc.neto_final}</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </Section>
+      )}
+
+      {/* Costos Fijos */}
+      {data.alt_a_costos && (
+        <Section title="COSTOS FIJOS">
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', background: 'rgba(0,0,0,0.3)', borderRadius: '10px', overflow: 'hidden' }}>
+              <thead>
+                <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                  <Th>Concepto</Th><Th>Categoría</Th><Th>Valor</Th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.alt_a_costos.map((c, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    <Td>{c.concepto}</Td>
+                    <Td><span style={{ fontSize: '9px', background: 'rgba(255,255,255,0.07)', padding: '2px 5px', borderRadius: '3px' }}>{c.categoria}</span></Td>
+                    <Td style={{ color: '#EF4444' }}>{formatCOP(c.valor)}</Td>
+                  </tr>
+                ))}
+                <tr style={{ background: 'rgba(255,255,255,0.03)', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                  <Td style={{ fontWeight: 'bold' }}>TOTAL</Td><Td />
+                  <Td style={{ fontWeight: 'bold', color: '#EF4444', fontSize: '15px' }}>
+                    {formatCOP(data.alt_a_costos.reduce((s, c) => s + (c.valor || 0), 0))}
+                  </Td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </Section>
+      )}
+    </div>
+  )
+}
+
+// ── Micro ─────────────────────────────────────────────────────────────────────
+function Section({ title, children }) {
+  return (
+    <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '18px' }}>
+      <h3 style={{ margin: '0 0 16px 0', fontSize: '14px', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px', borderLeft: `4px solid ${GREEN}`, paddingLeft: '12px' }}>{title}</h3>
+      {children}
+    </div>
+  )
+}
+const Th = ({ children }) => <th style={{ background: 'rgba(255,255,255,0.05)', color: '#9CA3AF', fontSize: '10px', textTransform: 'uppercase', textAlign: 'left', padding: '10px 12px' }}>{children}</th>
+const Td = ({ children, style }) => <td style={{ padding: '10px 12px', borderBottom: '1px solid rgba(255,255,255,0.05)', fontSize: '13px', color: 'white', verticalAlign: 'top', ...style }}>{children}</td>

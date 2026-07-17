@@ -7,7 +7,7 @@ import './AdminPanel.css'
 
 const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN || '1234'
 
-const TABS = ['VENTA EN MANO', 'ÓRDENES', 'RESUMEN', 'ESCANEAR', 'COMPRADORES (CRM)']
+const TABS = ['VENTA EN MANO', 'ÓRDENES', 'RESUMEN', 'ESCANEAR', 'COMPRADORES (CRM)', 'ESTRATEGIA']
 
 const emptyForm = {
   name: '', doc: '', email: '', phone: '', instagram: '',

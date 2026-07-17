@@ -11,7 +11,7 @@ function CheckoutModal({ isOpen, onClose, selectedOption, event, ticketQty }) {
         docType: 'CC', // Not used anymore
         doc: '', // Not used anymore
         discountCode: '', 
-        phone: '',
+        phone: sessionStorage.getItem('loop_lead_phone') || '',
         instagram: sessionStorage.getItem('instagram_username') || ''
     });
     const [attendees, setAttendees] = useState([]);
