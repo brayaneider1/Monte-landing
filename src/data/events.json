@@ -8,19 +8,26 @@
     "dateDisplay": "08 AGO 2026",
     "timeDisplay": "6 PM — hasta el amanecer",
     "location": "Florencia, Caquetá",
-    "venue": "Secret Location (Mirador)",
+    "venue": "Centro Recreacional Yurupari",
     "price": 29000,
-    "priceDisplay": "$28.888 COP",
+    "priceDisplay": "$29.000 COP",
     "priceLabel": "Preventa — Etapa 1",
     "ticketUrl": "https://wa.me/573124524674?text=Hola!%20Quiero%20mi%20boleta%20para%20SELVÁTICA%20%F0%9F%8C%BF%20(8%20de%20Agosto)",
     "themeId": "selvatica",
     "ticketOptions": [
       {
         "id": "preventa",
-        "name": "Preventa — Etapa 1",
-        "description": "Válido para 1 persona. Hasta julio 19.",
+        "name": "Preventa Individual",
+        "description": "1 persona. Entrada al evento.",
         "price": 29000,
-        "priceDisplay": "$28.888 COP"
+        "priceDisplay": "$29.000 COP"
+      },
+      {
+        "id": "after",
+        "name": "1 Persona + After",
+        "description": "Entrada + acceso al after del amanecer.",
+        "price": 40000,
+        "priceDisplay": "$40.000 COP"
       },
       {
         "id": "combo_2",
@@ -38,8 +45,8 @@
       },
       {
         "id": "combo_3_media",
-        "name": "Combo 3 Personas + Media",
-        "description": "Entrada para 3 personas + media de aguardiente o ron.",
+        "name": "Combo 3 + Trago",
+        "description": "3 personas + media de aguardiente o ron.",
         "price": 120000,
         "priceDisplay": "$120.000 COP"
       },
@@ -52,11 +59,11 @@
       }
     ],
     "lineup": [
-      { "name": "DIAVALO", "category": "Headliner", "genre": "Special Set" },
-      { "name": "+ Nacionales", "category": "Invitados", "genre": "Escena nacional" },
-      { "name": "+ Talento Regional", "category": "DJs locales", "genre": "Escena regional" }
+      { "name": "DIVALAO", "category": "Headliner", "genre": "Techno / Hypnotic" },
+      { "name": "OMNICLOUD", "category": "Nacional", "genre": "Melodic Techno" },
+      { "name": "OBA ILU", "category": "Nacional", "genre": "Afro House / Tribal" }
     ],
-    "description": "Un mirador secreto sobre la ciudad. Naturaleza salvaje, sonido diseñado a mano y la gente que hace que Florencia valga la pena. Bailamos desde que cae el sol hasta que amanece. Sin lineup confirmado todavía — pero el ambiente ya está asegurado."
+    "description": "Centro Recreacional Yurupari, Florencia. Naturaleza salvaje, sonido diseñado a mano y la gente que hace que Florencia valga la pena. Bailamos desde que cae el sol hasta que amanece."
   },
   {
     "id": "monte",
@@ -67,7 +74,7 @@
     "dateDisplay": "04 & 05 DIC 2026",
     "timeDisplay": "2 días de festival",
     "location": "Florencia, Caquetá",
-    "venue": "Secret Location",
+    "venue": "Por confirmar",
     "price": 20000,
     "priceDisplay": "$20.000 COP",
     "priceLabel": "Creyentes — Pase de 2 días",
@@ -76,7 +83,6 @@
     "lineup": [
       { "name": "Lineup por confirmar", "category": "Festival", "genre": "DJs locales, nacionales e internacionales" }
     ],
-    "description": "Dos días en el monte. Un espacio inmerso en la naturaleza, construido para ir hondo en la música y en la comunidad. El festival más ambicioso que hemos hecho hasta ahora — más detalles muy pronto."
+    "description": "Dos días en el monte. Un espacio inmerso en la naturaleza, construido para ir hondo en la música y en la comunidad."
   }
 ]
-

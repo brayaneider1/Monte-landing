@@ -109,19 +109,13 @@ function LoopHome() {
 
             {/* Noise texture layer */}
             <div className="noise-layer" />
-
-            {/* Retro grid overlay */}
             <div className="grid-overlay-back" style={{ opacity: theme === 'selvatica' ? 0.04 : 0.02 }} />
-
-            {/* Ambient bottom glow */}
             <div className="liquid-overlay" />
-
-            {/* Scanline effect */}
             <div className="scanline-overlay" />
 
             <main className="landing-content">
 
-                {/* ─── HERO ─── */}
+                {/* ─── HERO — PIEZA GRÁFICA ─── */}
                 <section className="brand-hero-section">
                     <motion.div
                         initial={{ opacity: 0, y: -30 }}
@@ -129,15 +123,55 @@ function LoopHome() {
                         transition={{ duration: 1, ease: 'easeOut' }}
                         className="brand-glow-header"
                     >
+                        {/* Top label */}
                         <span className="brand-badge">
-                            <span className="badge-dot" /> FLORENCIA — ESCENA ELECTRÓNICA RADICAL
+                            <span className="badge-dot" /> FLORENCIA, CAQUETÁ — 08.AGO.2026
                         </span>
 
-                        <h1 className="brand-main-title" data-glitch="LOOP.RAVE">
-                            LOOP.RAVE
-                        </h1>
+                        {/* Main title */}
+                        <h1 className="brand-main-title" data-glitch="LOOP.RAVE">LOOP.RAVE</h1>
 
-                        <div className="hero-cta-wrapper" style={{ marginTop: '3rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+                        {/* Subtitle */}
+                        <p className="brand-subtitle">SELVÁTICA</p>
+
+                        {/* Divider */}
+                        <div className="hero-divider">
+                            <span className="divider-line" />
+                            <span className="divider-icon">🌿</span>
+                            <span className="divider-line" />
+                        </div>
+
+                        {/* VENUE — PROTAGONISTA */}
+                        <motion.div
+                            className="hero-venue-block"
+                            initial={{ opacity: 0, scale: 0.92 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.8, delay: 0.4 }}
+                        >
+                            <span className="venue-eyebrow">📍 LUGAR DEL EVENTO</span>
+                            <h2 className="venue-name-hero">CENTRO RECREACIONAL<br />YURUPARI</h2>
+                            <span className="venue-location-tag">Florencia · Caquetá · Colombia</span>
+                        </motion.div>
+
+                        {/* Lineup preview */}
+                        <motion.div
+                            className="hero-lineup-preview"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.7 }}
+                        >
+                            <span className="lineup-label">LINEUP</span>
+                            <div className="hero-artists-row">
+                                <span>DIVALAO</span>
+                                <span className="dot-sep">·</span>
+                                <span>OMNICLOUD</span>
+                                <span className="dot-sep">·</span>
+                                <span>OBA ILU</span>
+                            </div>
+                        </motion.div>
+
+                        {/* CTA */}
+                        <div className="hero-cta-wrapper">
                             <motion.button
                                 onClick={() => {
                                     const section = document.getElementById('tickets-section');
@@ -145,21 +179,9 @@ function LoopHome() {
                                 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                style={{ 
-                                    padding: '1.2rem 3rem', 
-                                    fontSize: '1.3rem', 
-                                    fontWeight: '900', 
-                                    background: 'var(--neon-green)', 
-                                    color: '#fff', 
-                                    border: 'none', 
-                                    borderRadius: '4px',
-                                    boxShadow: '0 0 20px rgba(0, 255, 0, 0.4)',
-                                    cursor: 'pointer',
-                                    fontFamily: 'Outfit, sans-serif',
-                                    letterSpacing: '1px'
-                                }}
+                                className="hero-cta-btn"
                             >
-                                ADQUIRIR ENTRADAS
+                                🎟 COMPRAR ENTRADAS
                             </motion.button>
                         </div>
                     </motion.div>
@@ -232,11 +254,10 @@ function LoopHome() {
                                         <span className="tile-value">{activeEvent.dateDisplay}</span>
                                         <span className="tile-label-sub">{activeEvent.timeDisplay}</span>
                                     </div>
-                                    <div className="time-tile">
-                                        <span className="tile-label">DÓNDE</span>
-                                        <span className="tile-value venue-secret">
+                                    <div className="time-tile venue-tile-hero">
+                                        <span className="tile-label">📍 LUGAR</span>
+                                        <span className="tile-value venue-confirmed">
                                             {activeEvent.venue}
-                                            <span className="secret-badge">SECRET</span>
                                         </span>
                                         <span className="tile-label-sub">{activeEvent.location}</span>
                                     </div>
