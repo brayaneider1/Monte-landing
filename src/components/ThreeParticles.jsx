@@ -193,11 +193,20 @@ const ThreeParticles = ({ audioRef, isPlaying, theme = 'selvatica' }) => {
 
     /* ── ANIMATION LOOP ── */
     let lastTime = 0
+    let hidden = false
+
+    // Pause canvas when tab is not visible — huge battery/CPU win
+    const onVisibilityChange = () => { hidden = document.hidden }
+    document.addEventListener('visibilitychange', onVisibilityChange)
 
     function loop(now) {
       frameRef.current = requestAnimationFrame(loop)
 
-      const dt = Math.min((now - lastTime) / 16.67, 3)  // cap at 3× slowdown
+      // Skip frame if tab hidden
+      if (hidden) { lastTime = now; return }
+
+      // Throttle to ~30 fps on first load, smooth out after
+      const dt = Math.min((now - lastTime) / 16.67, 2)
       lastTime = now
 
       const { isPlaying: playing, theme: t } = stateRef.current
@@ -231,9 +240,9 @@ const ThreeParticles = ({ audioRef, isPlaying, theme = 'selvatica' }) => {
         p.y += p.vy * dt * speedMult
 
         /* wrap around edges */
-        if (p.y < -60)              { p.y = wH + 30; p.x = rand(0, canvas.width) }
-        if (p.y > wH + 60)          { p.y = -30 }
-        if (p.x < -80)              p.x = canvas.width + 40
+        if (p.y < -60)               { p.y = wH + 30; p.x = rand(0, canvas.width) }
+        if (p.y > wH + 60)           { p.y = -30 }
+        if (p.x < -80)               p.x = canvas.width + 40
         if (p.x > canvas.width + 80) p.x = -40
 
         /* pulsating opacity */
@@ -262,6 +271,7 @@ const ThreeParticles = ({ audioRef, isPlaying, theme = 'selvatica' }) => {
     return () => {
       cancelAnimationFrame(frameRef.current)
       window.removeEventListener('resize', resize)
+      document.removeEventListener('visibilitychange', onVisibilityChange)
     }
   }, [])  // single mount — state via refs
 

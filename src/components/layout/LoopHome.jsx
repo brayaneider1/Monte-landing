@@ -20,8 +20,6 @@ function LoopHome() {
     const [selectedOption, setSelectedOption] = useState(null)
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
     const [discountCode, setDiscountCode] = useState('')
-    const [toastMessage, setToastMessage] = useState(null)
-    const [toastVisible, setToastVisible] = useState(false)
     const [showWelcomeModal, setShowWelcomeModal] = useState(false)
 
     const { addToCart } = useCart()
@@ -82,30 +80,7 @@ function LoopHome() {
         return () => clearInterval(timer)
     }, [activeEvent])
 
-    // Social Proof Toasts
-    useEffect(() => {
-        const names = ['Juan_F', 'Maria_G', 'Carlos89', 'Andrea_T', 'Santi_Rave'];
-        const msgs = ['acaba de asegurar 2 boletas', 'compró Combo 4 Personas', 'se unió a SELVÁTICA', 'aseguró su entrada VIP'];
-        
-        const showToast = () => {
-            const name = names[Math.floor(Math.random() * names.length)];
-            const msg = msgs[Math.floor(Math.random() * msgs.length)];
-            setToastMessage(`🔥 [${name}] ${msg}`);
-            setToastVisible(true);
-            
-            setTimeout(() => {
-                setToastVisible(false);
-            }, 5000);
-        };
-
-        const interval = setInterval(() => {
-            if (!toastVisible) {
-                showToast();
-            }
-        }, 20000); // Every 20 seconds
-
-        return () => clearInterval(interval);
-    }, [toastVisible])
+    // (Social proof toasts removed — they were fake and caused unnecessary re-renders)
 
     const handleSelectEvent = (event) => {
         setActiveEvent(event)
@@ -483,33 +458,7 @@ function LoopHome() {
                 <span className="footer-copy">© 2026 LOOP.RAVE — Derechos de pista reservados</span>
             </footer>
 
-            {/* Social Proof Toast */}
-            <AnimatePresence>
-                {toastVisible && (
-                    <motion.div
-                        initial={{ opacity: 0, x: -50, y: 50 }}
-                        animate={{ opacity: 1, x: 0, y: 0 }}
-                        exit={{ opacity: 0, x: -50, y: 50 }}
-                        className="social-proof-toast"
-                        style={{
-                            position: 'fixed',
-                            bottom: '20px',
-                            left: '20px',
-                            background: 'rgba(0,0,0,0.85)',
-                            border: '1px solid var(--neon-green)',
-                            padding: '1rem',
-                            color: '#fff',
-                            fontFamily: 'Inter, monospace',
-                            fontSize: '0.85rem',
-                            borderRadius: '4px',
-                            zIndex: 9999,
-                            boxShadow: '0 0 15px rgba(0,255,0,0.2)'
-                        }}
-                    >
-                        {toastMessage}
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {/* Toast eliminado — era notificación falsa de bot */}
 
             <CheckoutModal 
                 isOpen={isCheckoutOpen} 
